@@ -1,0 +1,150 @@
+<h2 id="github.com">github.com?</h2>
+<p>GitHub is a site where many people store their open (and closed) source code repositories. It provides tools for browsing, collaborating on and documenting code. Your home institution may have a repository hosting system of it's own. To find out, ask your system administrator. GitHub, much like other forge hosting services ( <a href="https://launchpad.net">launchpad</a>, <a href="https://bitbucket.org">bitbucket</a>, <a href="http://code.google.com">googlecode</a>, <a href="http://sourceforge.net">sourceforge</a> etc.) provides :</p>
+<ul>
+<li>landing page support</li>
+<li>wiki support</li>
+<li>network graphs and time histories of commits</li>
+<li>code browser with syntax highlighting</li>
+<li>issue (ticket) tracking</li>
+<li>user downloads</li>
+<li>varying permissions for various groups of users</li>
+<li>commit triggered mailing lists</li>
+<li>other service hooks (twitter, etc.)</li>
+</ul>
+<p><strong>NOTE</strong> Public repos have public licences <strong>by default</strong>. If you don't want to share (in the most liberal sense) your stuff with the world, pay github money for private repos, or host your own.</p>
+<h2 id="github-pasword">github pasword</h2>
+<p>Setting up github at first requires a github user name and password. Please take a moment to <a href="https://github.com/signup/free">create a free one</a> (if you want to start paying, you can add that to your account some other day).</p>
+<h2 id="git-remote-steps-for-forking-a-repository">git remote : Steps for Forking a Repository</h2>
+<p>A key step to interacting with an online repository that you have forked is adding the original as a remote repository. By adding the remote repository, you inform git of a new option for fetching updates and pushing commits.</p>
+<p>The <strong>git remote</strong> command allows you to add, name, rename, list, and delete repositories such as the original one <strong>upstream</strong> from your fork, others that may be <strong>parallel</strong> to your fork, and so on.</p>
+<h3 id="exercise-fork-our-github-repository">Exercise : Fork Our GitHub Repository</h3>
+<p>In step 1, you will make a copy &quot;fork&quot; of our test repository {{page.testrepo}} on github. This gives you a copy of this repository that you control.</p>
+<p>In step 2, you will make a copy of <strong>your</strong> fork of the repository on your hard drive.</p>
+<p>In step 3, you will let git know that in addition to your local copy and your fork on github, there is another github repository (called &quot;upstream&quot;) that you might want to get updates from.</p>
+<p>Step 1 : Go to our <a href="https://github.com/{{page.username}}/{{page.testrepo}}">repository</a> from your browser, and click on the Fork button. Choose to fork it to your username rather than any organizations.</p>
+<p>Step 2 : Clone it. From your terminal :</p>
+<pre><code>$ git clone https://github.com/YOU/{{page.testrepo}}.git
+$ cd {{page.testrepo}}</code></pre>
+<p>Note: YOU is a placeholder for YOUR github username. If git asks you for a password here, it probably means you have mis-typed the url for the repository.</p>
+<p>Step 3 :</p>
+<pre><code>$ git remote add upstream https://github.com/{{page.username}}/{{page.testrepo}}.git
+$ git remote -v
+origin  https://github.com/YOU/{{page.testrepo}}.git (fetch)
+origin  https://github.com/YOU/{{page.testrepo}}.git (push)
+upstream        https://github.com/{{page.username}}/{{page.testrepo}}.git (fetch)
+upstream        https://github.com/{{page.username}}/{{page.testrepo}}.git (push)
+$</code></pre>
+<p>All repositories that are clones begin with a remote called origin.</p>
+<h3 id="whats-going-on-here">What's going on here?</h3>
+<p>The <strong>git remote add</strong> merely defines a nickname and a location that git will be able to communicate with for making copies of your repository. &quot;origin&quot; and &quot;upstream&quot; are nicknames for your fork of {{page.testrepo}} and the &quot;original&quot; {{page.testrepo}}, respectively.</p>
+<h2 id="git-fetch-fetching-the-contents-of-a-remote">git fetch : Fetching the contents of a remote</h2>
+<p>Now that you have alerted your repository to the presence of others, it is able to pull in updates from those repositories. In this case, if you want your master branch to track updates in the original {{page.testrepo}} repository, you simply <strong>git fetch</strong> that repository into the master branch of your current repository.</p>
+<p>The fetch command alone merely pulls down information recent changes from the original master (upstream) repository. By itself, the fetch command does not change your local working copy. To update your local working copy to include recent changes in the original (upstream) repository, it is necessary to also merge.</p>
+<h2 id="git-merge-merging-the-contents-of-a-remote">git merge : Merging the contents of a remote</h2>
+<p>To incorporate upstream changes from the original master repository (in this case {{page.username}}/{{page.testrepo}}) into your local working copy, you must both fetch and merge. The process of merging may result in conflicts, so pay attention. This is where version control is both at its most powerful and its most complicated.</p>
+<h3 id="exercise-fetch-and-merge-the-contents-of-our-github-repository">Exercise : Fetch and Merge the Contents of Our GitHub Repository</h3>
+<p>Step 1 : Fetch the recent remote repository history</p>
+<pre><code>$ git fetch upstream</code></pre>
+<p>Step 2 : Make certain you are in the master branch and merge the upstream master branch into your master branch</p>
+<pre><code>$ git checkout master
+$ git merge upstream/master</code></pre>
+<p>Step 3 : Check out what happened by browsing the directory.</p>
+<h2 id="git-pull-pull-fetch-merge">git pull : Pull = Fetch + Merge</h2>
+<p>The command <strong>git pull</strong> is the same as executing <strong>git fetch</strong> followed by <strong>git merge</strong>. Though it is not recommened for cases in which there are many branches to consider, the pull command is shorter and simpler than fetching and merging as it automates the branch matching. Specificially, to perform the same task as we did in the previous exercise, the pull command would be :</p>
+<pre><code>$ git pull upstream
+Already up-to-date.</code></pre>
+<p>When there have been remote changes, the pull will apply those changes to your local branch, unless there are conflicts with your local changes.</p>
+<h2 id="git-push-sending-your-commits-to-remote-repositories">git push : Sending Your Commits to Remote Repositories</h2>
+<p>The <strong>git push</strong> command pushes commits in a local working copy to a remote repository. The syntax is git push [remote] [local branch]. Before pushing, a developer should always pull (or fetch + merge), so that there is an opportunity to resolve conflicts before pushing to the remote.</p>
+<h3 id="exercise-push-a-change-to-github">Exercise : Push a change to github</h3>
+<p>We'll talk about conflicts later, but first, let's make a small change that won't have any conflicts and send our changes to your fork, the &quot;origin.&quot;</p>
+<ol style="list-style-type: decimal">
+<li><p>Create a file in the <code>messages</code> directory whose filename is your github id. (This is to ensure no conflicts just yet!) Add a line of text, perhaps a description of how you use, or expect to use, programming in your work.</p></li>
+<li><p>commit your change with <code>git add YOU</code> and <code>git commit -m &quot;Commit message&quot;</code></p></li>
+<li><p>Update your fork (&quot;origin&quot;) with your new changes:</p>
+<p>$ git push origin master</p></li>
+</ol>
+<p>This will update your github fork with any changes you've committed. Once you do this, you can see your changes on the github web interface to your repository, along with the time you made the change and your commit message.</p>
+<p>If you have permission to push to the upstream repository, sending commits to that remote is exactly analagous.</p>
+<pre><code>$ git push upstream master</code></pre>
+<p>In the case of the upstream push, new developer accounts will not allow this push to succeed. You're welcome to try it though.</p>
+<p>There is now a hierarchy of git repositories. There was the upstream repository that you can't write to, there is your fork of that repository that you have updated, and there is the local copy on your hard drive.</p>
+<p>In the {{page.testrepo}} code, you'll find a file called Readme.md. This is a standard documentation file that appears rendered on the landing page for the repository in github. To see the rendered version, visit your fork on github, (https://github.com/YOU/{{page.testrepo}}/Readme.md).</p>
+<h2 id="github-pull-requests">github pull requests</h2>
+<p>One protocol for updating repositories that we use at Software Carpentry is the &quot;pull request.&quot; This is a bundle of updates to the repository that can be accepted and merged into the upstream repository or rejected and not merged. If you would like to share your changes with the upstream repository, click the green &quot;compare and review&quot; button, and github will show you a summary of your commits. If you then click on &quot;Click to create a pull request for this comparison,&quot; your request will be sent to the upstream repository for acceptance or rejection.</p>
+<h2 id="git-merge-conflicts">git merge : Conflicts</h2>
+<p>This is the trickiest part of version control, so let's take it very carefully.</p>
+<p>Conflicts happen when git tries to combine changes from two different branches (local and remote, development and master) but finds that changes in the two branches interfere with each other and can't be automatically merged.</p>
+<p>Branches are a tool that git uses to facilitate managing changes. They allow us to switch between states of the repository and refer to states that we desire to merge.</p>
+<p>You'll often want to start a new branch for development, make your changes there, and then merge these changes into your main branch. It's a good convention to think of your master branch as the &quot;production branch,&quot; typically by keeping that branch clean of your local edits until they are ready for release. Developers typically use the master branch of their local fork to track other developers' changes in the remote repository until their own local development branch changes are ready for production.</p>
+<h3 id="exercise-experience-a-conflict">Exercise : Experience a Conflict</h3>
+<p>Step 1 : Make a new branch, edit the readme file in that branch, and commit your changes.</p>
+<pre><code>$ git branch development
+$ git checkout development
+Switched to branch &#39;development&#39;
+$ nano Readme.md &amp;
+&lt;edit the readme file and exit nano&gt;
+$ git commit -am &quot;Changed the Readme message to ... &quot;</code></pre>
+<p>Step 2 : Mirror the remote upstream repository in your master branch by pulling down my changes</p>
+<pre><code>$ git checkout master
+Switched to branch &#39;master&#39;
+$ git fetch upstream
+$ git merge upstream/master
+Updating 43844ea..3b36a87
+Fast-forward
+ Readme.md |   2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)</code></pre>
+<p>Step 3 : You want to push it to the internet eventually, so you pull updates from the upstream repository, but will experience a conflict.</p>
+<pre><code>$ git merge development
+Auto-merging Readme.md
+CONFLICT (content): Merge conflict in Readme.md
+Automatic merge failed; fix conflicts and then commit the result.</code></pre>
+<h2 id="git-resolve-resolving-conflicts">git resolve : Resolving Conflicts</h2>
+<p>Now what?</p>
+<p>Git has paused the merge. You can see this with the <strong>git status</strong> command.</p>
+<pre><code># On branch master
+# Unmerged paths:
+#   (use &quot;git add/rm &lt;file&gt;...&quot; as appropriate to mark resolution)
+#
+#       unmerged:      Readme.md
+#
+no changes added to commit (use &quot;git add&quot; and/or &quot;git commit -a&quot;)</code></pre>
+<p>The only thing that has changed is the Readme.md file. Opening it, you'll see something like this at the beginning of the file.</p>
+<pre><code>=====================
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Vanakkam
+=======
+Willkommen
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; development
+=====================</code></pre>
+<p>The intent is for you to edit the file and determine how to combine the variants from the two branches before committing the result. Decisions like this must be made by a human. Differences that can be automatically merged usually are, so humans are involved only when different edits touch the same piece of the repository.</p>
+<pre><code>Vanakkam and Willkommen</code></pre>
+<p>This results in a status To alert git that you have made appropriate alterations,</p>
+<pre><code>$ git add Readme.md
+$ git commit
+Merge branch &#39;development&#39;
+
+Conflicts:
+  Readme.md
+#
+# It looks like you may be committing a MERGE.
+# If this is not correct, please remove the file
+# .git/MERGE_HEAD
+# and try again.
+#
+$ git push origin master
+Counting objects: 10, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 762 bytes, done.
+Total 6 (delta 2), reused 0 (delta 0)
+To git@github.com:username/{{page.testrepo}}.git</code></pre>
+<h2 id="synchronizing">synchronizing</h2>
+<p>Now that lots of us created files and put in pull requests, we begin to suspect that the upstream repository might have new content and we are out of date. Try</p>
+<pre><code>$ git pull upstream master</code></pre>
+<p>to fetch, merge, and commit the changes from upstream repository-- including other people's changes that have been added to upstream. In this way we can all get updates of what the rest of us are working on.</p>
+<p>But now our forks -- on github -- are out of date. We can push to update those</p>
+<pre><code>$ git push origin master</code></pre>
+<p>And all is synchronized.</p>
+<h2 id="gitolite">gitolite</h2>
+<p><a href="https://github.com/sitaramc/gitolite">Gitolite</a> is a way for you to host your own multi-user git repositories. I'm not going to go into details here, but all you need is a machine with some drive space and network access. You can install <a href="https://help.ubuntu.com/community/Installation/MinimalCD">minimal ubuntu</a>, then sudo apt-get install gitolite will pull in everything you need. At that point, your collaborators will only need to send you their public ssh keys for you to configure pull and push access to the repos.</p>
