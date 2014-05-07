@@ -1,0 +1,29 @@
+WORKSHOP=~/git/wltrimbl/2014-05-12-cshl/
+MATERIALS=~/git/wltrimbl/2014-05-12-cshl/materials
+
+mkdir $MATERIALS
+mkdir $MATERIALS/00-overview/
+mkdir $MATERIALS/01-shell/
+mkdir $MATERIALS/02-automation/
+mkdir $MATERIALS/03-python-variables/
+mkdir $MATERIALS/04-python-datastructures/
+mkdir $MATERIALS/05-python-functions/
+mkdir $MATERIALS/06-python-flowcontrol
+mkdir $MATERIALS/08-versioncontrolgit/
+mkdir $MATERIALS/10-testing/
+mkdir $MATERIALS/11-introtoR/
+mkdir $MATERIALS/20-biopython/
+
+cp -r $WORKSHOP/lessons/thw-shell/*                         $MATERIALS/01-shell/
+wget -O - http://jdblischak.github.io/2013-10-17-uic/lessons/thw-shell/moreshell.html > $MATERIALS/02-automation/moreshell.html
+cp -r $WORKSHOP/lessons/thw-python/vars-types/*             $MATERIALS/03-python-variables/
+cp -r $WORKSHOP/lessons/thw-python/data-structures/*        $MATERIALS/04-python-datastructures/
+cp -r $WORKSHOP/lessons/thw-python/functions-and-modules/*  $MATERIALS/05-python-functions/
+cp -r $WORKSHOP/lessons/thw-python/flow-control/*           $MATERIALS/06-python-flowcontrol
+cp -r $WORKSHOP/lessons/thw-git/*                           $MATERIALS/08-versioncontrolgit/
+cp -r $WORKSHOP/lessons/thw-testing/                        $MATERIALS/10-testing/
+cp -r $WORKSHOP/lessons/misc-biopython/*                    $MATERIALS/20-biopython/
+cp -r ~/git/jdblischak/2013-09-19-chicago/lessons/uchicago-r/* $MATERIALS/11-introtoR/
+
+cp ~/git/wltrimbl/2013-11-14-woodshole/lessons/index.html  $MATERIALS
+cp ~/git/wltrimbl/2014-01-08-iastate/lessons/overview-python.md   $MATERIALS/00-overview/overview.md
