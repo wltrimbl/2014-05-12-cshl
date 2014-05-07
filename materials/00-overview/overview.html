@@ -1,0 +1,182 @@
+<h2 id="copy-this-lecture">Copy This Lecture!</h2>
+<p><br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Software Carpentry Overview</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://software-carpentry.net" property="cc:attributionName" rel="cc:attributionURL">Software Carpentry</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a>.</p>
+<h1 id="more-about-software-carpentry">More About Software Carpentry</h1>
+<h2 id="history">History</h2>
+<ul>
+<li>Founded by Greg Wilson in 1998, teaching scientists how to use supercomputers at LANL.</li>
+<li>Open sourced materials 2004-present</li>
+<li>Currently funded by the Sloan Foundation and the Mozilla Foundation</li>
+</ul>
+<h2 id="what-we-teach">What We Teach</h2>
+<ul>
+<li>Unix Command Line Interface (Shell)</li>
+<li>Shell automation</li>
+<li>Version Control</li>
+<li>Python</li>
+<li>Testing</li>
+</ul>
+<h2 id="what-we-actually-teach">What We <em>Actually</em> Teach</h2>
+<ul>
+<li>A program is just another piece of lab equipment</li>
+<li>Programming is a human activity</li>
+<li>Little pieces loosely joined</li>
+<li>Let the computer repeat it</li>
+<li>Paranoia makes us productive</li>
+<li>Better algorithms beat better hardware</li>
+</ul>
+<p><em>How to THINK like a programmer</em></p>
+<h2 id="who-we-teach">Who We Teach</h2>
+<div align="center">
+<table>
+<tr>
+<td>
+<img src="swc-demographics/thumb-age.png" />
+</td>
+<td>
+<img src="swc-demographics/thumb-role.png" />
+</td>
+</tr>
+<tr>
+<td>
+<img src="swc-demographics/thumb-gender.png" />
+</td>
+<td>
+<img src="swc-demographics/thumb-platform.png" />
+</td>
+</tr>
+</table>
+</div>
+
+<h2 id="who-we-are">Who We Are</h2>
+<ul>
+<li>Adina Howe (Argonne / Michigan State U)</li>
+<li>Will Trimble (Argonne)</li>
+<li>Kirsten Hofmockel (ISU)</li>
+<li>volunteers</li>
+</ul>
+<h2 id="our-goals-for-you">Our Goals for You</h2>
+<h3 id="we-will-take-you-on-a-tour-of">We will take you on a tour of:</h3>
+<ul>
+<li>Managing and sharing Software, Data, and Manuscripts with <strong>Git</strong></li>
+<li>Automating things with the <strong>shell</strong></li>
+<li>Practical Programming with <strong>Python</strong></li>
+<li>Scientific Computing with Python (numpy, matplotlib)</li>
+</ul>
+<h1 id="some-high-level-advice">Some High-Level Advice</h1>
+<h2 id="be-fluent-in-multiple-languages">Be fluent in multiple languages</h2>
+<p><comment> You speak multiple languages when interacting with a computer. Choosing to use a new tool, library, or language can be similar to learning a new language: </comment></p>
+<ul>
+<li>There is a high initial startup cost as you learn vocabulary, grammar, and idioms <font color=blue><code>sum(x*y for x,y in itertools.izip(x_vector, y_vector))</code> </font color></li>
+<li>But once you have gained some fluency, you will find yourself capable of new things!</li>
+<li>You will learn faster by observing and working with others who are more skilled than you</li>
+<li>Aim for languages and tools that allow you to express your models and manage your data simply.</li>
+</ul>
+<h2 id="make-it-work-right-first-make-it-fast-later.">Make it work right first, make it fast later.</h2>
+<ul>
+<li>&quot;Premature optimization is the root of all evil.&quot; -- Donald Knuth</li>
+<li>Directing your attention to making it use less disk / less memory / less time from the start is wrongly directed attention.</li>
+</ul>
+<h2 id="increase-debugging-bandwidth">Increase debugging bandwidth</h2>
+<ul>
+<li><strong>REPL (read-eval-print-loop)</strong> environments tighten the coupling between the code you write and the results you see, increasing productivity.</li>
+<li>Development environments and debuggers give you more information at once</li>
+<li>Test your procedures on subsets of your data <strong>so that you learn whether it works faster</strong></li>
+</ul>
+<h1 id="dont-repeat-yourself-or-others">Don't Repeat Yourself (or Others)</h1>
+<h2 id="automate-common-actions-by-saving-simple-blocks-of-code-into-scripts">Automate common actions by saving simple blocks of code into <strong>scripts</strong></h2>
+<ul>
+<li>A script is a set of commands organized into a single file</li>
+<li>The script is the basest unit of scientific programming, you should be comfortable writing these whenever you want to save or otherwise document or repeat your actions</li>
+<li>Use scripts to explore new ideas, they are easy to write and throw away</li>
+<li><strong>Don't repeat commands into your REPL, save them to a script</strong></li>
+</ul>
+<h2 id="refactor-commonly-used-blocks-of-code-into-functions">Refactor commonly used blocks of code into <strong>functions</strong></h2>
+<ul>
+<li>Eventually, you will find that your scripts have a lot of repeated code, or that you are spending a lot of time adjusting parameters at the top of the file</li>
+<li>Refactor out repeated code into <strong>function calls</strong> in your scripts and implement the <strong>function</strong> either in the same file or a separate one</li>
+<li>Be comfortable with the calling and return syntax of your programming language environment, whether it is bash or Python</li>
+<li><strong>Don't repeat code in scripts, refactor them to functions</strong></li>
+</ul>
+<h2 id="group-commonly-used-functions-into-libraries">Group commonly used functions into <strong>libraries</strong></h2>
+<ul>
+<li>If you have to write a lot of software functions, consider designing and releasing a library so that others do not have to share your misfortune</li>
+<li>Check that nobody else has implemented the functionality you need</li>
+<li>If something close exists, it may be worth adapting to your needs if the project is of high quality and suitably licensed</li>
+<li><em>Openly licensed non-commercial libraries tend to have a much longer effective lifespan than unreleased codes</em></li>
+<li><strong>Share your code with others, and use their code</strong></li>
+</ul>
+<h1 id="reduce-complexity">Reduce Complexity</h1>
+<h2 id="basic-strategies">Basic strategies</h2>
+<ul>
+<li>Use languages and libraries that reduce the complexity of your work</li>
+<li>It is worth installing a complicated or expensive software tool if your computations or model are naturally expressed with it</li>
+<li>Always look for opportunities to write <strong>less</strong> code
+<ul>
+<li>you will have to do less initial work (sometimes)</li>
+<li>you will introduce less bugs</li>
+<li>your code will be easier to understand and maintain</li>
+</ul></li>
+<li>Keep individual functions short, single-purpose, possible to be confident in festooning.</li>
+</ul>
+<h2 id="back-up-your-data">Back up your data!</h2>
+<h2 id="use-version-control-for-checkpointing-and-collaboration">Use version control for checkpointing and collaboration</h2>
+<ul>
+<li>use local version control software to checkpoint personal code development</li>
+<li>checkpointing your work encourages wild ideas and late-night coding sessions</li>
+<li>you can easily restore back in the morning if it was a bad idea</li>
+<li>use <strong>distributed version control</strong> to collaborate with others</li>
+<li>We advocate <em>Git</em>, but you may be stuck with whatever your group uses</li>
+</ul>
+<h1 id="verify-and-validate-your-code">Verify and Validate your Code</h1>
+<h2 id="principles-of-verification-and-validation">Principles of verification and validation</h2>
+<ul>
+<li><strong>verification</strong> - is your code correctly written?</li>
+<li>Be paranoid.</li>
+<li>test small things!<br /></li>
+<li>test that what you assume is TRUE is in fact so.</li>
+<li>test frameworks can help you verify your code</li>
+<li><strong>validation</strong> - do your computations accurately model the phenomena in question?</li>
+<li>not a good candidate for automation. (Not sad at all)</li>
+</ul>
+<h2 id="document-your-computational-work">Document your computational work</h2>
+<ul>
+<li>Save every bit of code you use for generating publishable results</li>
+<li>Document and comment your code for yourself as if you will need to understand it in 6 months</li>
+<li>use README files liberally</li>
+<li>as well as file-level, function-level, and inline documentation</li>
+<li>If any piece of code is too complex to easily describe, consider refactoring it</li>
+</ul>
+<h2 id="you-sometimes-need-geeks.-you-never-need-dorks.">You sometimes need geeks. You never need dorks.</h2>
+<div align="center">
+<table>
+<tr>
+<td>
+<img src="swc-demographics/careful.png" />
+</td>
+</tr>
+</table>
+</div>
+
+<h1 id="thats-all-folks">That's all Folks</h1>
+<h1 id="books">Books</h1>
+<h1 id="research-literature">Research Literature</h1>
+<h2 id="programming-languages-for-scientific-computing">Programming Languages for Scientific Computing</h2>
+<p>Matthew G. Knepley</p>
+<p>Preprint: http://arxiv.org/pdf/1209.1711.pdf</p>
+<p><em>Gives an overview of modern programming languages and techniques such as code generation, templates, and mixed-language designs. This is a preprint, so expect some rough spots.</em></p>
+<h2 id="two-solitudes">Two Solitudes</h2>
+<p>Greg Wilson</p>
+<p>Slides: http://www.slideshare.net/gvwilson/two-solitudes</p>
+<p><em>Describes Greg's journey as a scientist and leader for the Software Carpentry project, provides some insight into the differences between industry and academics.</em></p>
+<h2 id="best-practices-for-scientific-computing">Best Practices for Scientific Computing</h2>
+<p>D. A. Aruliah, C. Titus Brown, Neil P. Chue Hong, Matt Davis, Richard T. Guy, Steven H. D. Haddock, Katy Huff, Ian Mitchell, Mark Plumbley, Ben Waugh, Ethan P. White, Greg Wilson, Paul Wilson</p>
+<p>Preprint: http://arxiv.org/abs/1210.0530</p>
+<p><em>Good summary paper of many fundamental practices for working with and developing scientific software. This is a preprint, so expect some rough spots.</em></p>
+<h1 id="web-references">Web References</h1>
+<h2 id="what-every-computer-scientist-should-know-about-floating-point-arithmetic">What Every Computer Scientist Should Know About Floating-Point Arithmetic</h2>
+<p>David Golberg</p>
+<p>Web article: http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html</p>
+<p><em>Introduction to the IEEE floating-point standard, its implications, and many of the common pitfalls when using floating-point numbers in scientific computing</em></p>
+<h2 id="science-code-manifesto">Science Code Manifesto</h2>
+<p>http://sciencecodemanifesto.org</p>
+<p><em>Publicly signed commitment to clear licensing and curation of software associated with research publications.</em></p>

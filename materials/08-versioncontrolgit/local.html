@@ -1,0 +1,262 @@
+<h2 id="example-a-slide-deck-for-a-presentation">Example: A Slide Deck for a Presentation</h2>
+<p>Imagine you have two computers: the first is a big, powerful desktop machine with a big, dual monitor setup. The second is a tiny lightweight netbook you take with you when you travel. Imagine also that you have a presentation at a conference overseas. You know that no matter how &quot;finished&quot; you think you are with your slide deck, inevitably you will realize you need to add an extra figure or recalculate some data AFTER leaving the country and your main desktop workstation. How can you be sure your slide deck, data, and the programs you've written are synchronized between your two machines? How can you be sure that every little change you've made on your netbook is reflected on your desktop? What happens if you start making changes on your slide deck, only to realize you need to drop back to the slide deck you had five days ago?</p>
+<h2 id="git-what-is-version-control">git : What is Version Control ?</h2>
+<p>Very briefly, version control is a way to <em>keep a backup of changing files</em>, to <em>store a history of those changes</em>, and most importantly to <em>allow many people in a collaboration to make changes</em> to the same files concurrently. There are a lot of version control systems. Wikipedia provides both a nice vocabulary list and a fairly complete table of some popular version control systems and their equivalent commands.</p>
+<p>What problems does version control solve? * undo mistakes by rolling back to earlier versions * run and test with older versions for debugging (when did it break?) * allows you to keep and switch between multiple verisons of code * automatic merging of edits by different people * can distribute/publish analysis code and workflows * archive or back up your thesis so when your laptop goes away, your thesis doesn't</p>
+<p>Today, we'll be using git. Git is an example of a distributed version control system, distinct from centralized version control systems. I'll make the distinction clear later, but for now, the table below will suffice.</p>
+<p>Version Control System Tool Options</p>
+<ul>
+<li><strong>Distributed</strong></li>
+<li>Decentralized CVS (dcvs)<br /></li>
+<li>mercurial (hg)</li>
+<li>git (git)</li>
+<li>bazaar (bzr)</li>
+<li><strong>Centralized</strong></li>
+<li>concurrent versions system (cvs)</li>
+<li>subversion (svn)</li>
+</ul>
+<h2 id="git-clone-weve-seen-git-already">git clone : we've seen git already</h2>
+<p>Yesterday morning, after installing git, we asked everyone to run</p>
+<pre><code>git clone http://github.com/USERNAME/YYYY-MM-DD-PLACE </code></pre>
+<p>This created a copy of the software carpentry repository materials on each of your hard drives yesterday morning. If you did this yesterday, you don't need to to it again.</p>
+<p><em>But</em>, last night, the instructors changed the content on github, so now the repositories on all our hard drives are out of date.</p>
+<pre><code>cd
+cd boot-camps
+git pull</code></pre>
+<p>will try to retrieve all of last night's changes and update your local copies. Note: git commands work only when executed from within the directory that contains the repository.</p>
+<h2 id="git---help-getting-help">git --help : Getting Help</h2>
+<p>The first thing I like to know about any tool is how to get help. From the command line type</p>
+<pre><code>$ man git</code></pre>
+<p>The manual entry for the git version control system will appear before you. You may scroll through it using arrows, or you can search for keywords by typing <strong>/</strong> followed by the search term. I'm interested in help, so I type <strong>/help</strong> and then hit enter. It looks like the syntax for getting help with git is <strong>git --help</strong>.</p>
+<p>To exit the manual page, type q.</p>
+<p>Let's see what happens when we type :</p>
+<pre><code>$ git --help</code></pre>
+<p>Excellent, it gives a list of commands it is able to help with, as well as their descriptions.</p>
+<pre><code>$ git --help
+usage: git [--version] [--exec-path[=&lt;path&gt;]] [--html-path]
+           [-p|--paginate|--no-pager] [--no-replace-objects]
+           [--bare] [--git-dir=&lt;path&gt;] [--work-tree=&lt;path&gt;]
+           [-c name=value] [--help]
+           &lt;command&gt; [&lt;args&gt;]
+
+The most commonly used git commands are:
+   add        Add file contents to the index
+   bisect     Find by binary search the change that introduced a bug
+   branch     List, create, or delete branches
+   checkout   Checkout a branch or paths to the working tree
+   clone      Clone a repository into a new directory
+   commit     Record changes to the repository
+   diff       Show changes between commits, commit and working tree, etc
+   fetch      Download objects and refs from another repository
+   grep       Print lines matching a pattern
+   init       Create an empty git repository or reinitialize an existing one
+   log        Show commit logs
+   merge      Join two or more development histories together
+   mv         Move or rename a file, a directory, or a symlink
+   pull       Fetch from and merge with another repository or a local branch
+   push       Update remote refs along with associated objects
+   rebase     Forward-port local commits to the updated upstream head
+   reset      Reset current HEAD to the specified state
+   rm         Remove files from the working tree and from the index
+   show       Show various types of objects
+   status     Show the working tree status
+   tag        Create, list, delete or verify a tag object signed with GPG
+
+See &#39;git help &lt;command&gt;&#39; for more information on a specific command.</code></pre>
+<h2 id="git-config-controls-the-behavior-of-git">git config : Controls the behavior of git</h2>
+<p>Since we're going to be making commits, we need to perform a one-time per computer configuation of git so git knows who to credit for our contributions to the version control system.</p>
+<pre><code> $ git config --global user.name &quot;YOUR NAME&quot;
+ $ git config --global user.email &quot;YOUR EMAIL&quot;
+ </code></pre>
+<h2 id="git-init-creating-a-local-repository">git init : Creating a Local Repository</h2>
+<p>To keep track of numerous versions of your work without saving numerous copies, you can make a local repository for it on your computer. What git does is to save the first version, then for each subsequent version it saves only the changes. That is, git only records the difference between the new version and the one before it. With this compact information, git is able to recreate any version on demand by adding the changes to the original in order up to the version of interest.</p>
+<p>To create your own local (on your own machine) repository, you must initialize the repository with the infrastructure git needs in order to keep a record of things within the repository that you're concerned about. The command to do this is <strong>git init</strong> .</p>
+<h3 id="exercise-create-a-local-repository">Exercise : Create a Local Repository</h3>
+<p>Step 1 : Initialize your repository.</p>
+<pre><code>$ cd
+$ mkdir good_science
+$ cd good_science
+$ git init
+Initialized empty Git repository in /home/swc/good_science/.git/</code></pre>
+<p>Step 2 : Browse the directory's hidden files to see what happened here. Open directories, browse file contents. Learn what you can in a minute.</p>
+<pre><code>$ ls -A
+.git
+$ cd .git
+$ ls -A
+HEAD        config      description hooks       info        objects     refs </code></pre>
+<p>Step 3 : Use what you've learned. You may have noticed the file called description. You can describe your repository by opening the description file and replacing the text with a name for the repository. Mine will be called &quot;Reproducible Science&quot;. You may call yours anything you like.</p>
+<pre><code>$ nano description &amp;</code></pre>
+<p>Step 4 : Applications sometimes create files that are not needed. For example, some applications create backup or temporary files with names like'filename.bak' and 'filename.aux' that don't really need to be watched by version control. You can ask git to ignore such files by editing the file '.git/info/exclude'. Edit the file to ignore files the end with '.bak'.</p>
+<pre><code> git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with &#39;#&#39; are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~</code></pre>
+<h2 id="git-add-adding-a-file-to-version-control">git add : Adding a File To Version Control</h2>
+<p>For the git repository to know which files within this directory you would like to keep track of, you must add them. First, you'll need to create one, then we'll learn the <strong>git add</strong> command.</p>
+<h3 id="exercise-add-a-file-to-your-local-repository">Exercise : Add a File to Your Local Repository</h3>
+<p>Step 1 : Create a file to add to your repository.</p>
+<pre><code>$ nano readme.rst &amp;</code></pre>
+<p>Step 2 : Inform git that you would like to keep track of future changes in this file.</p>
+<pre><code>$ git add readme.rst</code></pre>
+<h2 id="git-status-checking-the-status-of-your-local-copy">git status : Checking the Status of Your Local Copy</h2>
+<p>The files you've created on your machine are your local &quot;working&quot; copy. The changes your make in this local copy aren't backed up online automatically. Until you commit them, the changes you make are local changes. When you change anything, your set of files becomes different from the files in the official repository copy. To find out what's different about them in the terminal, try:</p>
+<pre><code>$ git status
+# On branch master
+#
+# Initial commit
+#
+# Changes to be committed:
+
+#   (use &quot;git rm --cached &lt;file&gt;...&quot; to unstage)
+#
+#       new file:   readme.rst
+#</code></pre>
+<p>The null result means that you're up to date with the current version of the repository online. This result indicates that the current difference between the repository HEAD (which, so far, is empty) and your good_science directory is this new readme.rst file.</p>
+<h2 id="git-commit-saving-a-snapshot">git commit : Saving a Snapshot</h2>
+<p>In order to save a snapshot of the current state (revision) of the repository, we use the commit command. This command is always associated with a message describing the changes since the last commit and indicating their purpose. Informative commit messages will serve you well someday, so make a habit of never committing changes without at least a full sentence description.</p>
+<p><strong>ADVICE: Commit often</strong></p>
+<p>In the same way that it is wise to often save a document that you are working on, so too is it wise to save numerous revisions of your code. More frequent commits increase the granularity of your <strong>undo</strong> button.</p>
+<p><strong>ADVICE: Write good commit messages</strong></p>
+<p>There are no hard and fast rules, but good commits are atomic: they are the smallest meaningful change. A good commit message usually contains a one-line description followed by a longer explanation if necessary. Remember, you will be writing commit messages for yourself as much as for anyone else.</p>
+<p><a href="https://github.com/swcarpentry/bc/">Our repo</a> should have some good commit messages.</p>
+<h3 id="exercise-commit-your-changes">Exercise : Commit Your Changes</h3>
+<p>Step 1 : Commit the file you've added to your repository.</p>
+<pre><code>$ git commit -am &quot;This is the first commit. It adds a readme file.&quot;
+[master (root-commit) 1863aef] This is the first commit. It adds a readme file.
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+ create mode 100644 readme.rst</code></pre>
+<p>Step 2 : Admire your work.</p>
+<pre><code>$ git status
+# On branch master
+nothing to commit (working directory clean)</code></pre>
+<h2 id="git-diff-viewing-the-differences">git diff : Viewing the Differences</h2>
+<p>There are many diff tools.</p>
+<p>If you have a favorite you can set your default git diff tool to execute that one. Git, however, comes with its own diff system.</p>
+<p>Let's recall the behavior of the diff command on the command line. Choosing two files that are similar, the command :</p>
+<pre><code>$ diff file1 file2</code></pre>
+<p>will output the lines that differ between the two files. This information can be saved as what's known as a patch, but we won't go deeply into that just now.</p>
+<p>The only difference between the command line diff tool and git's diff tool is that the git tool is aware of all of the revisions in your repository, allowing each revision of each file to be treated as a full file.</p>
+<p>Thus, git diff will output the changes in your working directory that are not yet staged for a commit. To see how this works, make a change in your readme.rst file, but don't yet commit it.</p>
+<pre><code>$ git diff</code></pre>
+<p>A summarized version of this output can be output with the --stat flag :</p>
+<pre><code>$ git diff --stat</code></pre>
+<p>To see only the differences in a certain path, try:</p>
+<pre><code>$ git diff HEAD -- [path]</code></pre>
+<p>To see what IS staged for commit (that is, what will be committed if you type git commit without the -a flag), you can try :</p>
+<pre><code>$ git diff --cached</code></pre>
+<h2 id="git-log-viewing-the-history">git log : Viewing the History</h2>
+<p>A log of the commit messages is kept by the repository and can be reviewed with the log command.</p>
+<pre><code>$ git log
+commit 1863aefd7db752f58226264e5f4282bda641ddb3
+Author: Joshua Smith &lt;joshua.r.smith@gmail.com&gt;
+Date:   Wed Feb 8 16:08:08 2012 -0600
+
+    This is the first commit. It adds a readme file.</code></pre>
+<p>There are some useful flags for this command, such as</p>
+<pre><code>-p
+-3
+--stat
+--oneline
+--graph
+--pretty=short/full/fuller/oneline
+--since=X.minutes/hours/days/weeks/months/years or YY-MM-DD-HH:MM
+--until=X.minutes/hours/days/weeks/months/years or YY-MM-DD-HH:MM
+--author=&lt;pattern&gt;</code></pre>
+<h2 id="git-reset-unstaging-a-staged-file">git reset : Unstaging a staged file</h2>
+<pre><code>git reset filename     (opposite of &#39;git add filename&#39;)</code></pre>
+<h2 id="git-checkout-discarding-unstaged-modifications-git-checkout-has-other-purposes">git checkout : Discarding unstaged modifications (git checkout has other purposes)</h2>
+<pre><code>git checkout -- filename     </code></pre>
+<h2 id="git-rm-removing-a-file">git rm : Removing a file</h2>
+<p>git rm filename (Removes a file from the repository)</p>
+<h3 id="exercise">Exercise :</h3>
+<pre><code>1) Create 5 files in your directory with one line of content in each file.
+2) Commit the files to the repository.
+3) Change 2 of the 5 files and commit them.
+4) Undo the changes in step 3)
+5) Print out the last entry in the log.</code></pre>
+<h2 id="git-branch-listing-creating-and-deleting-branches">git branch : Listing, Creating, and Deleting Branches</h2>
+<p>Branches are pointers to a version of a repository that can be edited and version controlled in parallel. They are useful for pursuing various implementations experimentally or maintaining a stable core while developing separate sections of a code base.</p>
+<p>Without an argument, the <strong>branch</strong> command lists the branches that exist in your repository.</p>
+<pre><code>$ git branch
+* master</code></pre>
+<p>The master branch is created when the repository is initialized. With an argument, the <strong>branch</strong> command creates a new branch with the given name.</p>
+<pre><code>$ git branch experimental
+$ git branch
+* master
+  experimental</code></pre>
+<p>To delete a branch, use the <strong>-d</strong> flag.</p>
+<pre><code>$ git branch -d experimental
+$ git branch
+* master</code></pre>
+<h2 id="git-checkout-switching-between-branches-abandoning-local-changes">git checkout : Switching Between Branches, Abandoning Local Changes</h2>
+<p>The <strong>git checkout</strong> command allows context switching between branches as well as abandoning local changes.</p>
+<p>To switch between branches, try</p>
+<pre><code>$ git branch newbranch 
+$ git checkout newbranch 
+$ git branch</code></pre>
+<p>How can you tell we've switched between branches? When we used the branch command before there was an asterisk next to the master branch. That's because the asterisk indicates which branch you're currently in.</p>
+<h2 id="git-merge-merging-branches">git merge : Merging Branches</h2>
+<p>At some point, the experimental branch may be ready to become part of the core or two testing branches may be ready to be combined for further integration testing. The method for combining the changes in two parallel branches is the <strong>merge</strong> command.</p>
+<h3 id="exercise-create-and-merge-branches">Exercise : Create and Merge Branches</h3>
+<p>Step 1 : Create two new branches and list them</p>
+<pre><code>$ git branch first
+$ git branch second</code></pre>
+<p>Step 2 : Make changes in each new branch and commit them.</p>
+<pre><code>$ git checkout first
+Switched to branch &#39;first&#39;
+$ touch firstnewfile
+$ git add firstnewfile
+$ git commit -am &quot;Added firstnewfile to the first branch.&quot;
+[first 68eba44] Added firstnewfile to first branch.
+ 0 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 firstnewfile
+$ git checkout second
+Switched to branch &#39;second&#39;
+$ touch secondnewfile
+$ git add secondnewfile
+$ git commit -am &quot;Added secondnewfile to the second branch.&quot;
+[second 45dd34c] Added secondnewfile to the second branch.
+ 0 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 secondnewfile</code></pre>
+<p>Step 3 : Merge the two branches into the core</p>
+<pre><code>$ git checkout first
+Switched to branch &#39;first&#39;
+$ git merge second
+Merge made by recursive.
+ 0 files changed, 0 insertions(+), 0 deletions(-)
+  create mode 100644 secondnewfile
+$ git checkout master
+Switched to branch &#39;master&#39;
+$ git merge first
+Updating 1863aef..ce7e4b5
+Fast-forward
+ 0 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 firstnewfile
+ create mode 100644 secondnewfile</code></pre>
+<h2 id="git-clone-copying-a-repository">git clone : Copying a Repository</h2>
+<p>Yesterday, you checked out a git type repository at https://github.com/USERNAME/YYYY-MM-DD-PLACE</p>
+<p>When you clone the Original repository, the one that is created on your local machine is a copy, and contains both the contents and the history. With the right configuration, you can share your changes with your collaborators and import changes that others made in their versions. You can also update the original repository with your changes.</p>
+<p>We'll get to that soon, but for now, let's move on to a fairly easy-to-use system for managing repositories.</p>
+<h3 id="exercise-cloning-another-repository-from-github">Exercise : Cloning Another Repository from GitHub</h3>
+<p>Step 1 : Pick any repository you like. There are many cool projects hosted on github. Take a few minutes here, and pick a piece of code.</p>
+<p>Step 2 : Clone it. If you didn't find anything cool, you can chose the &quot;instructional&quot; Spoon-Knife repository:</p>
+<pre><code>$ cd
+$ git clone git@github.com/octocat/Spoon-Knife.git
+Cloning into Spoon-Knife...
+remote: Counting objects: 24, done.
+remote: Compressing objects: 100% (21/21), done.
+remote: Total 24 (delta 7), reused 17 (delta 1)
+Receiving objects: 100% (24/24), 74.36 KiB, done.
+Resolving deltas: 100% (7/7), done.</code></pre>
+<p>Step 3 : You should see many files download themselves onto your machine. Let's make sure it worked. Change directories to the source code and list the contents.</p>
+<pre><code>$ cd Spoon-Knife
+$ ls </code></pre>
+<h2 id="git-pull-pulling-updates-from-the-original-repository">git pull : Pulling updates from the Original Repository</h2>
+<p>Updating your repository is like voting. You should update early and often especially if you intend to contribute back to the upstream repository and particularly before you make or commit any changes. This will ensure you're working with the most up-to-date version of the repository. Updating won't overwrite any changes you've made locally without asking, so don't get nervous. When in doubt, update.</p>
+<pre><code>$ git pull 
+Already up-to-date.</code></pre>
+<p>Since we just pulled the repository down, we will be up to date unless there has been a commit by someone else to the Original repository in the meantime.</p>
+<h2 id="resources">Resources</h2>
+<p><a href="http://git-scm.com/book">git book</a></p>

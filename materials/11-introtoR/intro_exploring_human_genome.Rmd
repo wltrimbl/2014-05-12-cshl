@@ -1,0 +1,618 @@
+Introduction to R: Exploring the genes of the human genome
+=============================================================
+
+Author: John Blischak
+
+## Description
+
+In this lesson we will learn about the basics of R by inspecting a 
+biological dataset. I have created a spreadsheet-like dataset using data on
+the human genome from the Ensembl Biomart database. Each row contains the
+Ensembl transcript that has the longest coding sequence for a given Ensembl
+gene ID. I also removed any genes that were not translated at all in order to
+keep the size of the dataset manageable. For the exact details, you can see
+`data/create_datasets.R`.
+
+My goal is twofold. First is for you to become comfortable with the basics of
+R and get some intuition for how it works. Second I want to provide you the
+motivation to actually use R the next time you analyze data instead of using
+Excel by showing you how powerful it can be. Please ask a question directly to
+me or on the EtherPad if you need more explanation.
+
+**Learning objectives:**
++ Understand the various mode of vectors
++ Inspect objects
++ Filter vectors and data frames
++ Use vectorized functions
++ Make basic plots
++ tapply, table
++ Write R script in place of Excel
+
+## Preparing the workspace
+
+As a first step, let's clear out the working environment and verify that
+we are in the correct working directory. We'll use the trick we learned in the
+first section, `rm(list = ls())` to ensure that there are no objects in the 
+working space that could potentially interfere with our analysis if we 
+accidentally referred to them. The other option would be to go to the `Session`
+tab and click the option `Restart R`.
+
+```{r}
+rm(list = ls())
+getwd()
+```
+
+### Exercise: Set the working directory
+
+```{r}
+# Your code here
+
+```
+
+## Import and inspect the dataset
+
+Instead of opening the file in Excel, we use R's `read.table` function. 
+
+```{r}
+genes <- read.table("data/ensembl_human_genes.txt", header = TRUE, sep = "\t",
+                    quote = "", stringsAsFactors = FALSE)
+head(genes)
+```
+
+We have provided R the following information to retrieve our dataset:
++ Open the file `data/ensembl_human_genes.txt`
++ The file has a header, so the first row contains the column names
++ The file is tab-separated (`"\t"` stands for "tab")
++ Ignore all quotation marks (" and ')
++ Do not convert strings to factors (explanined later in this lesson)
+
+The function `head` gave us a preview of the dataset, which does look very
+much like a spreadsheet. There are column names like `ensembl_transcript_id`
+and `chromosome_name`, and there are row numbers for each gene entry. 
+
+But how is R representing the data? Let's use some R function to further
+inspect this dataset. As we explore what we have imported, we'll learn about 
+the different data types in R.
+
+```{r}
+class(genes)
+dim(genes)
+str(genes)
+```
+
+
+Thus, the data is in a data.frame with 21,056 rows and 11 columns. The 11
+columns each contain a different type of information, which is summarized by
+the function `str`, which shows the **str**ucture of an object. `str` is an
+amazing tool for both beginner and advanced programmers (it was voted the
+most useful R trick on a [StackOverflow post](http://stackoverflow.com/questions/1295955/what-is-the-most-useful-r-trick)),
+so use it often! For our data.frame `genes`, it explains the data in each
+column. The individual columns are each a specific type of vector.
+
+## The vector
+
+One big difference between R and other programming languages you may be 
+familiar with like C++, Java, Python, Perl, etc. is that there are no scalar
+data types. In other words, the base object is a vector. The code below 
+demonstrates that even though a variable may look like a scalar, it is 
+actually a vector with a length of one. We will see the ramifications of this
+soon.
+
+```{r}
+x <- 3
+is.vector(x)
+length(x)
+```
+
+A discussion of data types can be an extremely advanced topic. As a 
+pragmatic consideration, I will present a **simplified** view of the main types
+of vectors in R. Below I will describe four types of vectors:
++ numeric
++ character
++ factor
++ logical
+
+## Numeric vector
+
+A numeric vector in our dataset is `percentage_gc_content`, which as the name
+implies is the percentage of G and C bases in the transcript sequence. As the 
+output from `str(genes)` hinted, we can access the columns of a data.frame
+using the dollar sign character, `$`. Let's learn more about what it contains:
+
+```{r}
+is.numeric(genes$percentage_gc_content)
+head(genes$percentage_gc_content)
+summary(genes$percentage_gc_content)
+```
+
+Note that R has designated some vectors as int for integers. In our simplified
+view, we are not going to worry about this distintion because R considers
+them to be numeric as well, e.g.:
+
+```{r}
+is.numeric(genes$cds_length)
+```
+
+Since R is designed for exploratory data analysis, it is very simple to 
+visualize data.
+
+```{r}
+plot(genes$percentage_gc_content)
+```
+
+The graph generated by `plot` is not very informative in this case since the
+x-axis is simply the order of the data in the vector, i.e. the index, and
+also the plot is extremely over-plotted. 
+
+```{r}
+hist(genes$percentage_gc_content)
+```
+
+On the other hand, the histogram created by `hist` provides a nice
+visualization of the information returned by the `summary` function.
+
+R has the typical mathematical functions you would expect:
++ `+`, `-`  addition, subtraction
++ `*`, `/`  multiplication, division
++ `^`  exponentiation
++ `%/%`  integer division
++ `%%`  modulo (returns the remainder of a division operation)
+
+But first, let's create some toy vectors that are more manageable to work with.
+There are multiple ways to create a numeric vector. 
+
+```{r}
+(num_vec_one <- c(1, 5, 8, 3))  # c stands for "combine"
+(num_vec_two <- 1:8)
+(num_vec_three <- seq(from = 3, to = 12, by = 3))
+```
+
+**Note**: I used a trick above. Normally for an assignment, R generates no
+output. In order to see what is contained in the variable as it is assigned,
+you can surround the expression with parentheses.
+
+In other programming languages, in order to do something simple like add one to
+each number of a vector, you would have to use some sort of looping
+mechanism to add each number separately. However, because R is vector-based
+this is extremely simple.
+
+```{r}
+num_vec_one + 1
+num_vec_two / num_vec_three
+num_vec_three / num_vec_three
+c(0, 0, 0, 0) + 1:3  # alternatively could have used rep(0, 4)
+```
+
+The examples above demonstrate the comcept of **recycling**. The first element
+of the first vector is paired with the first element of the second, and then
+the second elements of each vector, and so on. If one vector is shorter than
+than the other, it starts again at the beginning of the vector. As we saw in 
+the last example, if the shorter vector is not a multiple of the longer 
+vector, R issues a warning since it is likely a mistake.
+
+As you may have deduced, many R functions are "vectorized."
+
+```{r}
+sqrt(c(2, 4, 9, 16))
+abs(c(-4, 6, -987))
+```
+
+Utilizing vectorized functions will not only make your code easier to
+understand, but it also will speed up your code. This is because many
+base R functions are actually written in C, so one function call to a C
+function is much faster than multiple calls to C and/or R functions (see
+this blog [post](http://yihui.name/en/2010/10/on-the-gory-loops-in-r/)) for
+details).
+
+Lastly, you may have noticed that there is always a "[1]" next to the output.
+This tells us the index of the first element on the line. It is useful when
+the output spans more than one line, e.g.
+
+```{r}
+1:100
+```
+
+This also implies that R indexing starts at 1, instead of at 0 like most other
+programming languages. We can use this index information to extract specific
+elements of a vector.
+
+```{r}
+num_vec_three
+num_vec_three[2:4]
+num_vec_three[c(1, 4)]
+genes$external_gene_id[c(1, 4, 15)]
+```
+
+**Exercise**
+
+The column `cds_length` contains the number of base pairs that constitute
+the protein-coding portion of the gene. Thus, we would expect each entry to
+be a multiple of three base pairs. Check to see if our assumption is
+correct.
+
+```{r}
+# your code here
+
+```
+
+## character vectors
+
+The other main mode of vector that we observe in the `genes` data.frame is
+character. Character vectors contain non-numeric data, often referred to as
+"strings."
+
+**Question:** Why is `chromosome_name` a character vector and not a numeric
+vector?
+
+Create character vectors using `c`. As expected, the functions for strings
+are also vectorized.
+
+```{r}
+dna_seqs <- c("AGTCTATGCTAGC", "ACT", "ATCGTCTCTCGGCTGGCGGCAA")
+dna_len <- nchar(dna_seqs)  # counts the number of characters in each string
+dna_len
+```
+
+One very useful string function is `paste`. It pastes together the vectors it
+is supplied, recycling shorter vectors if necessary. Below we convert the
+chromosomes to the necessary format to make a BED file.
+
+```{r}
+chroms <- c(1:23, "X", "Y", "MT")  # the numbers are converted to characters
+# Add the prefix "chr"
+paste("chr", chroms, sep = "")  # alternatively could use paste0
+```
+
+`substr` extracts a substring of each element. Below we extract the last six
+elements of each string (all the gene ID's start with ENSG00000) to create
+shorter unique identifiers.
+
+```{r}
+ensembl_gene_id_short <- substr(genes$ensembl_gene_id, 10, 15)
+head(ensembl_gene_id_short)
+```
+
+`gsub` replaces a specific pattern in each string. 
+
+```{r}
+(biotypes <- unique(genes$gene_biotype))
+gsub("_", "-", biotypes)
+```
+
+`grep` searches for a specific pattern and returns the indexes that contain
+that pattern. This is useful for selecting specific subsets of a dataset. Below
+we search for the genes whose gene ontology (GO) description includes the
+string "mast cell".
+
+```{r}
+head(genes$name_1006)  # the cryptic name Ensembl uses for GO description
+grep("mast cell", genes$name_1006)
+```
+
+If you find yourself performing lots of `grep` searches, you will want to
+invest some time in learning regular expressions. These allow you to create
+more complex search patterns. See `?regex` for details.
+
+## factor
+
+Factors represent categorical variables. Unfortunately they are complicated.
+They can be very useful at times, especially when
+building statistical models or graphing. However, they can behave in very
+unexpected ways to produce strange results. This is why when we orginally
+read in our dataset, we set the read.table option `stringsAsFactors = FALSE`.
+It is best to keep everything as strings, and only convert to a factor when
+you need it (and usually R will automatically convert a character vector
+to a factor when it makes sense).
+
+Here we convert the character vector `gene_biotype` to a factor. The main 
+feature of a factor is the levels, which correspond to the set of categorical
+variables. 
+
+```{r}
+genes$gene_biotype <- factor(genes$gene_biotype)
+str(genes$gene_biotype)
+levels(genes$gene_biotype)
+table(genes$gene_biotype)
+boxplot(genes$percentage_gc_content ~ genes$gene_biotype)
+```
+
+If you wanted to change the order of the x-axis on the boxplot, we can
+order the factor.
+
+```{r}
+genes$gene_biotype <- ordered(genes$gene_biotype, levels = c("protein_coding",
+                              "polymorphic_pseudogene", "IG_C_gene", 
+                              "IG_D_gene", "IG_J_gene", "IG_V_gene",
+                              "TR_C_gene", "TR_D_gene", "TR_J_gene", 
+                              "TR_V_gene"))
+boxplot(genes$percentage_gc_content ~ genes$gene_biotype)
+```
+
+To obtain the median value for the percent GC content for each of the factor
+levels that we observe in the boxplot, we can use the function `tapply`.
+
+```{r}
+tapply(genes$percentage_gc_content, genes$gene_biotype, median)
+```
+
+Here `tapply` takes the first argument, `genes$percentage_gc_content`, and 
+splits these values into the categories as specified by the factor
+`genes$gene_biotype` provided as the second. Then it applies the third 
+argument, the function `median`, to each of the subcategories.
+
+So factors are clearly powerful. But again you'll need to be careful since
+they are more complicated than other vectors. In fact, even though in many
+ways they are similar to vectors, they aren't even a vector. This is because
+factors have the additional attribute `levels`.
+
+```{r}
+is.vector(genes$gene_biotype)
+is.factor(genes$gene_biotype)
+```
+
+
+## logical vectors
+
+We have already seen that some functions return `TRUE` or `FALSE`. In R these
+are of mode "logical" (also more generally know as Boolean values). And of 
+course all the same vector properties apply to these as well.
+
+relational operator
++ x < y
++ x > y
++ x <= y
++ x >= y
++ x == y
++ x != y
+
+Logical operators
++ ! x  NOT x
++ x & y  x AND y (element-wise)
++ x && y  x AND y (first element only)
++ x | y  x OR y (element-wise)
++ x || y  x OR y (first element only)
++ xor(x, y)  x OR y but not x AND Y (exlusive OR)
+
+Here are some examples:
+
+```{r}
+1:10 < 5
+!c(TRUE, FALSE, TRUE, TRUE)
+c(TRUE, TRUE, FALSE) & c(TRUE, FALSE, FALSE)
+c(TRUE, TRUE, FALSE) | c(TRUE, FALSE, FALSE)
+xor(c(TRUE, TRUE, FALSE), c(TRUE, FALSE, FALSE))
+c(TRUE, TRUE, TRUE) && c(TRUE, FALSE, TRUE) && c(FALSE, FALSE, TRUE)
+```
+
+**Best practice:** `TRUE` and `FALSE` can also be abbreviated to `T` and `F`,
+respectively. However, you should avoid this. `TRUE` and `FALSE` cannot be
+used as variables names, but `T` and `F` can. This could lead to strange errors.
+
+```{r}
+T == TRUE
+T <- "abc"
+T == TRUE
+# TRUE  <- "abc"  # throws an error
+rm(T)
+```
+
+Another useful aspect of logical vectors is that they can be used for counting.
+This is because `TRUE` is synonymous with 1, and `FALSE` with 0. 
+
+```{r}
+TRUE == 1
+FALSE == 0
+# How many are numbers in my vector are greater than 10?
+my_nums <- c(5, 54, 9, 4, 1, 84, 47, 35, 18)
+my_nums > 10
+sum(my_nums > 10)
+# How many are greater than 10 but less than 40?
+sum(my_nums > 10 & my_nums < 40)
+```
+
+Logical vectors are also great for indexing. We already saw how we can select
+specific subsets of data by referring to the index numbers. However, we can
+also select elements of a list with a logical vector: elements in the vector
+that match up with TRUE in the logical vector are selected.
+
+```{r}
+x <- 1:10
+(divisible_by_2 <- x %% 2 == 0)
+x[divisible_by_2]
+# This can also be done in just one line of code
+x[x %% 2 == 0]
+```
+
+## Converting vector modes
+
+The various vector modes can be converted to other modes.
+
+```{r}
+as.character(-5:5)
+as.character(c(TRUE, T, F, FALSE))
+as.numeric(c("1", "2", "3"))
+as.numeric(c(TRUE, T, F, FALSE))
+as.logical(c("TRUE", "T", "F", "FALSE"))
+as.logical(-10:10)
+```
+
+But be careful! Especially when using factors. See below for an error that can
+be disatrous since R will not even give a warning.
+
+```{r}
+chroms <- c(1, 5, 3, 1, "X")
+chroms_fac <- as.factor(chroms)
+as.numeric(chroms_fac)
+str(chroms_fac)
+```
+
+If you are sure it is supposed to be numeric, first convert it to a character
+vector before converting to a numeric vector.
+
+```{r}
+numeric_fac <- factor(c(87, 3, 1, 7, 25, 3, 87))
+as.numeric(as.character(numeric_fac))
+```
+
+### Exercise: Saving a plot
+
+Recall the histogram we made earlier of the distribution of percent GC content
+for human genes, `hist(genes$percentage_gc_content)`. There are lots of
+options available to customize the appearance of the plot. See `?hist` for all
+of the available options. Here are some ideas to get you started:
++ Change the label of the x-axis
++ Change the title
++ Color the bars of the histogram
++ Change the number of breaks
+
+```{r}
+# png("figs/distribution-gc-content.png")
+
+# Customize the histogram here
+hist(genes$percentage_gc_content)
+
+# dev.off()
+```
+
+After you have customized the plot, uncomment the first and last lines of code
+above. Before you were always sending the plot to the plotting area of
+RStudio. The function `png` directs the plot to be saved in the given filename.
+The last line, `dev.off`, tells R to stop sending information to the external
+file. 
+
+**Extra challenge:** Use the function `abline` to add a vertical line at
+50% GC content. Then add another vertical line at the median percentage GC
+content (the vertical lines should be different colors). Re-run the code and
+confirm that the file `figs/distribution-gc-content.png` was updated.
+
+## Indexing a Data frame
+
+We've already seen that we can extract a specific column of a data.frame using
+the dollar sign character, `$`. Additionally we can extract specific rows of
+that column using square brackets, `[]`. But a data.frame can also be indexed
+specifically using its 2D structure. Again the square brackets are used, but 
+this time there are two arguments separated by a comma. The first vector
+specifies which rows to select, and the second vector specifies the columns.
+
+```{r}
+genes[158:165, 4:6]
+```
+
+Also similar to vectors, we can choose rows and columns with logical vectors.
+A row/column that matches `TRUE` in the logical vector is kept and one that
+matches `FALSE` is removed.
+
+```{r}
+# Only keep every other column
+genes[1:10, c(TRUE, FALSE)]
+```
+
+If the row or column argument is omitted, all rows or columns are included,
+respectively.
+
+```{r}
+dim(genes[3, ]) # select only the 3rd row, returns a data.frame
+length(genes[, 8]) # select only the 8th column, returns a vector
+```
+
+We usually want to subset the data based on the values contained in the
+data.frame.
+
+```{r}
+# Select only genes with the biotype "protein_coding"
+dim(genes[genes$gene_biotype == "protein_coding", ])
+```
+
+The argument `genes$gene_biotype == "protein_coding"` creates a logical vector,
+thus only rows where this condition is `TRUE` are added to the new variable. All
+the columns are copied as well. 
+
+### Exercise: Subsetting
+
+1) Create a new data.frame called `genes_sub` that only contains genes that are
+on the X chromosome and are labeled "protein_coding."
+
+```{r}
+# Your code here
+
+```
+
+2) Now make `genes_sub` contain only genes who have a GO category with the
+word "development" in it. Recall that the GO column is named "names_1006"
+and you can search for words in strings using the function `grep`.
+
+```{r}
+# Your code here
+
+```
+
+**Note:** There is a convenience function called `subset` that makes these
+sorts of operations more succint. However, it comes with the warning that it is
+"intended for use interactively," so you do not want to become too dependent
+on it. See this [StackOverflow post](http://stackoverflow.com/questions/9860090/in-r-why-is-better-than-subset) if you are curious about the dangers of 
+subset.
+
+Lastly, you can also subset a data.frame by specifically referring to the
+row or column names. Our data.frame `genes` does not have informative row
+names (they are the same as the index), but it does have column names.
+
+```{r}
+colnames(genes)
+genes[1:10, c("ensembl_transcript_id", "cds_length")]
+```
+
+Referring to the column specifically by its name not only saves you from having
+to figure out which column it is, but it allows you to change the order of the
+columns of your input data without effecting the code exectution.
+
+## Creating a bed file
+
+Let's create [BED](http://www.genome.ucsc.edu/FAQ/FAQformat.html#format1) file
+of our data.frame `genes_sub`, which contains protein-coding genes on the X
+chromosome that are involved in any developmental process. This BED file could
+then be used for a variety of purposes, e.g. find the number of ChIP-seq reads
+that fall within each gene.
+
+First we need to add the prefix "chr" to all of our chromosome names.
+
+```{r, eval = FALSE}
+genes_sub$chromosome_name <- paste0("chr", genes_sub$chromosome_name)
+```
+
+Second, we have to convert from Ensembl coordinates, which are 1-based and 
+both start and end coordinats are inclusive, to UCSC coordinates, which are
+0-based and teh end coordinate is exclusive 
+([details](http://genome.ucsc.edu/FAQ/FAQtracks#tracks1)). Thus we need to
+subtract one from our starting positions.
+
+```{r, eval = FALSE}
+genes_sub$transcript_start <- genes_sub$transcript_start -1
+```
+
+Third, we need to select the right columns in the right order.
+
+```{r, eval = FALSE}
+genes_bed <- genes_sub[, c("chromosome_name", "transcript_start",
+                           "transcript_end", "ensembl_gene_id")]
+```
+
+And fourth, we write the data to a file.
+
+```{r, eval = FALSE}
+write.table(genes_bed, "data/x_dev_genes.bed", quote = FALSE,
+            row.names = FALSE, col.names = FALSE)
+```
+
+
+### Exercise
+
+Instead of searching for ChIP-seq reads across the whole gene body, let's 
+instead focus just on the transcription start site (TSS). Modify `genes_bed` so
+that the intervals are +/- 1000 bp from the TSS, and then write the output to
+a file called `x_dev_genes_tss.bed` in the directory `data`.
+
+```{r}
+# Your code here
+
+```
+
