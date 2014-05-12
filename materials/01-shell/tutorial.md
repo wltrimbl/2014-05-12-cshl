@@ -250,6 +250,9 @@ familiar in there?
 
 **Shortcuts**
 
+Return to ~/2012-05-12-cshl/material 
+    cd ~/2012-05-12-cshl/material  
+
 There are some shortcuts which you should know about. Dealing with the
 home directory is very common. So, in the shell the tilde character,
 `~`, is a shortcut for your home directory. Navigate to the `shell`
@@ -263,12 +266,12 @@ above your current directory. Thus:
 
     ls ..
 
-prints the contents of the `/home/swc/{{page.bootcamp_slug}}`. You can chain
+prints the contents of the `~/{{page.bootcamp_slug}}`. You can chain
 these together, so:
 
     ls ../../
 
-prints the contents of `/home/swc` which is your home
+prints the contents of your home
 directory. Finally, the special directory `.` always refers to your
 current directory. So, `ls`, `ls .`, and `ls ././././.` all do the
 same thing, they print the contents of the current directory. This may
@@ -451,11 +454,11 @@ directory. This tells the shell to run the `hello` program which is
 located right here. So, you can run any program by entering the path
 to that program. You can run `hello` equally well by specifying:
 
-    /home/swc/{{page.bootcamp_slug}}/shell/hello
+    /home/swc/{{page.bootcamp_slug}}/materials/01-shell//hello
 
 Or by entering:
 
-    ../shell/hello
+    ../01-shell/hello
 
 When there are no `/` characters, the shell assumes you want to look
 in one of the default places for the program.
@@ -484,9 +487,9 @@ is where the name comes from, `cat` is short for concatenate).
 1.  Print out the contents of the `shell/dictionary.txt`
     file. What does this file contain?
 
-2.  Without changing directories, (you should still be in `shell`),
+2.  Without changing directories, (you should still be in `01-shell`),
     use one short command to print the contents of all of the files in
-    the `/home/swc/{{page.bootcamp_slug}}/shell/data/thomas` directory.
+    the `/home/swc/{{page.bootcamp_slug}}/materials/01-shell/data/thomas` directory.
 
 * * * *
 
@@ -552,7 +555,7 @@ exists.
 Use `>>`, to append the contents of all of the files which contain the
 number 4 in the directory:
 
-    /home/swc/{{page.bootcamp_slug}}/shell/data/gerdal
+    /home/swc/{{page.bootcamp_slug}}/01-shell/data/gerdal
 
 to the existing `all_data` file. Thus, when you are done `all_data`
 should contain all of the experiment data from Bert and any
@@ -907,7 +910,11 @@ following:
     data directory has reappeared in its original state
 
 
-## Example: text-mininggene expression data
+## Example: text-mining gene expression data
+
+Go to data
+    cd
+    cd ~/{{page.bootcamp_slug}}/materials/data/cuffdiff
 
 This is a list of a few commands that we will use to do a little data mining of text file containing a comparison of gene expression data from and RNA-Seq experiment. 
 
