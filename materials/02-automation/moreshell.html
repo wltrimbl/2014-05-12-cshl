@@ -53,13 +53,9 @@ If this is what you see, you have the right table.  If not, you may need to trou
 <p>Let&#39;s move the data into the repo directory. This is what we would do if it were really our project: we&#39;d have a folder named &quot;Future Nature Paper&quot; and place our data in it, rather than clogging up our home directory. The command <code>mv</code> moves the data:</p>
 <div class="highlight"><pre><code class="text language-text" data-lang="text">mv Metahit_index.txt ~/2014-05-12-cshl
 </code></pre></div>
-<p>Move the other three python scripts we downloaded to the same directory.</p>
 
-<p>Another thing <code>mv</code> can do is change the name of a file. For instance, if you wanted to rename your data you could type:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">mv Metahit_index.txt IMPORTANT_Metahit_index.txt
-</code></pre></div>
 <p>This is clearly very important data. Let&#39;s make a back up of the data so that while we&#39;re making python scripts and running them we don&#39;t accidentally destroy the data.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">cp IMPORTANT_Metahit_index.txt Metahit_index.txt
+<div class="highlight"><pre><code class="text language-text" data-lang="text">cp Metahit_index.txt Metahit_index.bakcup.txt
 </code></pre></div>
 <p>While we are working through python examples in a bit, if you happen to damage your file, now you have a back up you can revert to. </p>
 
@@ -106,7 +102,7 @@ If this is what you see, you have the right table.  If not, you may need to trou
 
 <ol>
 <li><p>Find how many Spanish people were in the study.</p></li>
-<li><p>Pull out all of the information for only the first five people that did not have a disease in the dataset and save it to a file in your home directory called 5<em>spanish</em>participants.txt. </p></li>
+<li><p>Pull out all of the information for only the first five people that did not have a disease in the dataset and save it to a file in your home directory called 5-healthy-spanish-participants.txt. </p></li>
 </ol>
 
 <hr>
