@@ -905,32 +905,153 @@ following:
 3.  Enter the command: `git checkout -- data` You should see that the
     data directory has reappeared in its original state
 
-**BONUS**
 
-Redo exercise 4, except rename only the files which do not already end
-in `.txt`. You will have to use the `man` command to figure out how to
-search for files which do not match a certain name. 
+## Example: gene expression data
 
-* * * * 
+This is a list of a few commands that we will use to do a little data mining of text file containing a comparison of gene expression data from and RNA-Seq experiment. 
 
-### Bonus:
+<table>
+  <tr><th>|</th><td><i>strings together the inputs/outputs of a series of commands</i></td></tr>
+  <tr><th>grep</th><td><i>searches for patterns in text</i></td></tr>
+  <tr><th>sort</th><td><i>orders lines in text</i></td></tr>
+  <tr><th>head</th><td><i>prints the top N lines of text</i></td></tr>
+  <tr><th>tail</th><td><i>prints the bottom N lines of text</i></td></tr>
+  <tr><th>uniq</th><td><i>reports or filters repeated lines of text</i></td></tr>
+  <tr><th>wc</th><td><i>counts words, characters or lines</i></td></tr>
+  <tr><th>bc</th><td><i>does simple math on the command line</i></td></tr>
+</table>
 
-**backtick, xargs**: Example find all files with certain text
 
-**alias** -> rm -i
+### The data
 
-**variables** -> use a path example
+You have a tab-delimited text file, gene_exp.txt, that contains data from a differential gene expression analysis.  Each line describes a comparison of numerical expression levels for one gene in two samples.
 
-**.bashrc**
+#### What does the file look like 
 
-**du**
+What is the file structure? Without options, ***head*** will print the top 10 lines of the file
 
-**ln**
+<pre>
+$ head  gene_exp.txt
+gene	sample_1	sample_2	status	value_1	value_2	significant
+AT1G01010		WT		hy5	NOTEST	0	1.49367	no
+AT1G01020		WT		hy5	NOTEST	7.27837	10.7195	no
+AT1G01030		WT		hy5	NOTEST	1.18638	1.10483	no
+AT1G01040		WT		hy5	NOTEST	0.239843	2.24208	no
+AT1G01046		WT		hy5	NOTEST	0		0	no
+AT1G01050		WT		hy5	OK	9.06975		23.5089	yes
+AT1G01060		WT		hy5	NOTEST	4.04534		6.46964	no
+AT1G01070		WT		hy5	NOTEST	1.24918		2.41377	no
+AT1G01073		WT		hy5	NOTEST	0		0	no
+</pre>
 
-**ssh and scp**
+This is a well-formatted, tab-delimited text file.  The header line describes the columns for us.  We can use this to help answer some questions.  Note that ***sort*** and ***cut*** assume that the columns in each row are tab-delimited.
 
-**regular expressions**
+#### How many records are there in the file?
 
-**permissions**
+We can use ***wc -l*** to count the lines
 
-**chaining commands together**
+<pre>
+$ wc -l gene_exp.txt 
+   33567 gene_exp.txt
+</pre>
+
+
+#### How many genes have enough data to perform the comparison (have 'OK' status)? How many had significantly different expression levels between samples?
+
+We can search for *OK* and *yes* in the file, then count how many lines are returned by ***grep***.  Note the use of the pipe symbol '|'.  ***wc -l*** is acting on the text printed by ***grep***, not the input file.
+
+<pre>
+$ grep OK gene_exp.txt | wc -l
+    4112
+$ grep yes gene_exp.txt | wc -l
+    1403
+</pre>
+
+For 33,567 genes, 4,112 had enough data to do a comparison and 1,403 had significantly different expression.
+
+
+### Question:  What if the strings *yes* or *OK* appear in other columns of the file?
+
+There is not a lot of room for free text in this example but it can't hurt to check.  This sort of thing happens all the time in real life!  We can use ***cut*** to remove the normal column (for example, column 7 for 'yes').  Remove column 7, then search for *yes*.
+
+<pre>
+$ cut -f1-6 gene_exp.txt | grep yes
+</pre>
+
+No results.  That is good.  For *OK* we need to search all columns except column 4:
+
+<pre>
+cut -f1-3,5-7 gene_exp.txt | grep OK
+</pre>
+
+No results.  The file is good.  Note that the ***-k*** argument could also have been expressed as ***-k1,2,3,5,6,7***
+
+
+#### What are the 20 genes with the highest expression levels in sample 1 and differ significantly between samples?
+
+We can use ***grep*** to get the 'yes' lines, then use ***sort*** to order the lines base on the numeric values in column 5 (value_1).  We pipe the output to ***head*** so we just look at the top 10 lines for now.  The ***k5*** argument means sort on column (key) 5; ***-n*** means sort numerically.  
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n | head
+AT1G40125    WT		  hy5	 OK  0	15.3962	yes
+AT1G42040    WT		  hy5	 OK  0	23.5267	yes
+AT1G42050    WT		  hy5	 OK  0	31.0539	yes
+AT2G05915    WT		  hy5	 OK  0	61.649	yes
+AT2G40802    WT		  hy5	 OK  0	551.414	yes
+AT3G01345    WT		  hy5	 OK  0	29.1111	yes
+AT3G22235    WT		  hy5	 OK  0	14.7018	yes
+AT3G33073    WT		  hy5	 OK  0	18.2451	yes
+AT3G42720    WT		  hy5	 OK  0	19.4265	yes
+AT4G06530    WT		  hy5	 OK  0	20.3433	yes
+</pre>
+
+You may have noticed that cut and sort use different arguments for the same thing (column number).  The collection of tools in unix-like operating systems evolved over time from a variety of sources and authors, so their command line arguments are not always consistent.  If in doubt:
+
+<pre>
+man cut
+</pre>
+
+Note the the values in column 5 above are all zeros.  We are not quite there yet.  We can use the ***r*** flag to sort in descending order.
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head
+AT2G01021    WT		  hy5	 OK  282360  3.44931e+06	yes
+AT1G08115    WT		  hy5	 OK  69434.3 35118.3		yes
+ATCG00010    WT		  hy5	 OK  51851.7 23458.4		yes
+ATCG00400    WT		  hy5	 OK  27712.3 2078		yes
+AT5G41471    WT		  hy5	 OK  27289.6 3739.15		yes
+XLOC_013786  WT		  hy5	 OK  24253.8 2509.04		yes
+ATCG00630    WT		  hy5	 OK  22883.4 5164.64		yes
+AT3G24615    WT		  hy5	 OK  13744.4 4184.12		yes
+AT4G39363    WT		  hy5	 OK  11180.5 2136.42		yes
+AT3G06895    WT		  hy5	 OK  9823.28 2143.76		yes
+</pre>
+
+OK, now we have the 10 most abundant genes in sample 1.  However, the question was "What are the 20 genes with the highest expression levels in sample 1...".  We can get the top 20 by adding the ***-20*** argument to ***head***.  Note also that we were asked for the gene, not the gene plus data.  We can use ***cut*** to extract what we want.  The ***-f1*** arument tells it to grab the first column.
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head -20 | cut -f1
+AT2G01021
+AT1G08115
+ATCG00010
+ATCG00400
+AT5G41471
+XLOC_013786
+ATCG00630
+AT3G24615
+AT4G39363
+AT3G06895
+XLOC_008330
+ATCG00700
+ATCG00390
+AT3G41768
+AT1G29930
+AT1G79040
+XLOC_001625
+AT1G67090
+AT3G56020
+XLOC_032942
+</pre>
+
+And we have our answer!
+
