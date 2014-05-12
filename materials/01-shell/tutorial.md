@@ -906,19 +906,17 @@ following:
     data directory has reappeared in its original state
 
 
-## Example: gene expression data
+## Example: text-mininggene expression data
 
 This is a list of a few commands that we will use to do a little data mining of text file containing a comparison of gene expression data from and RNA-Seq experiment. 
 
 <table>
   <tr><th>|</th><td><i>strings together the inputs/outputs of a series of commands</i></td></tr>
+  <tr><th>cut</th><td><i>extracts sections from each line of text</i></td></tr>
   <tr><th>grep</th><td><i>searches for patterns in text</i></td></tr>
   <tr><th>sort</th><td><i>orders lines in text</i></td></tr>
   <tr><th>head</th><td><i>prints the top N lines of text</i></td></tr>
-  <tr><th>tail</th><td><i>prints the bottom N lines of text</i></td></tr>
-  <tr><th>uniq</th><td><i>reports or filters repeated lines of text</i></td></tr>
   <tr><th>wc</th><td><i>counts words, characters or lines</i></td></tr>
-  <tr><th>bc</th><td><i>does simple math on the command line</i></td></tr>
 </table>
 
 
@@ -952,7 +950,7 @@ We can use ***wc -l*** to count the lines
 
 <pre>
 $ wc -l gene_exp.txt 
-   33567 gene_exp.txt
+     200 gene_exp.txt
 </pre>
 
 
@@ -962,12 +960,12 @@ We can search for *OK* and *yes* in the file, then count how many lines are retu
 
 <pre>
 $ grep OK gene_exp.txt | wc -l
-    4112
+    32
 $ grep yes gene_exp.txt | wc -l
-    1403
+    12
 </pre>
 
-For 33,567 genes, 4,112 had enough data to do a comparison and 1,403 had significantly different expression.
+For 199 genes, 32 had enough data to do a comparison and 12 had significantly different expression.
 
 
 ### Question:  What if the strings *yes* or *OK* appear in other columns of the file?
@@ -993,16 +991,16 @@ We can use ***grep*** to get the 'yes' lines, then use ***sort*** to order the l
 
 <pre>
 $ grep 'yes' gene_exp.txt | sort -k5 -n | head
-AT1G40125    WT		  hy5	 OK  0	15.3962	yes
-AT1G42040    WT		  hy5	 OK  0	23.5267	yes
-AT1G42050    WT		  hy5	 OK  0	31.0539	yes
-AT2G05915    WT		  hy5	 OK  0	61.649	yes
-AT2G40802    WT		  hy5	 OK  0	551.414	yes
-AT3G01345    WT		  hy5	 OK  0	29.1111	yes
-AT3G22235    WT		  hy5	 OK  0	14.7018	yes
-AT3G33073    WT		  hy5	 OK  0	18.2451	yes
-AT3G42720    WT		  hy5	 OK  0	19.4265	yes
-AT4G06530    WT		  hy5	 OK  0	20.3433	yes
+AT1G01320	WT	hy5	OK	4.94764	20.8172	yes
+AT1G01050	WT	hy5	OK	9.06975	23.5089	yes
+AT1G02120	WT	hy5	OK	11.3678	23.8411	yes
+AT1G01610	WT	hy5	OK	14.4058	5.2457	yes
+AT1G01120	WT	hy5	OK	15.6414	7.70519	yes
+AT1G01430	WT	hy5	OK	19.7868	10.301	yes
+AT1G01090	WT	hy5	OK	55.3618	33.6315	yes
+AT1G01170	WT	hy5	OK	71.5683	21.235	yes
+AT1G02500	WT	hy5	OK	71.7299	32.6785	yes
+AT1G02140	WT	hy5	OK	105.425	65.1563	yes
 </pre>
 
 You may have noticed that cut and sort use different arguments for the same thing (column number).  The collection of tools in unix-like operating systems evolved over time from a variety of sources and authors, so their command line arguments are not always consistent.  If in doubt:
@@ -1015,42 +1013,32 @@ Note the the values in column 5 above are all zeros.  We are not quite there yet
 
 <pre>
 $ grep 'yes' gene_exp.txt | sort -k5 -n -r | head
-AT2G01021    WT		  hy5	 OK  282360  3.44931e+06	yes
-AT1G08115    WT		  hy5	 OK  69434.3 35118.3		yes
-ATCG00010    WT		  hy5	 OK  51851.7 23458.4		yes
-ATCG00400    WT		  hy5	 OK  27712.3 2078		yes
-AT5G41471    WT		  hy5	 OK  27289.6 3739.15		yes
-XLOC_013786  WT		  hy5	 OK  24253.8 2509.04		yes
-ATCG00630    WT		  hy5	 OK  22883.4 5164.64		yes
-AT3G24615    WT		  hy5	 OK  13744.4 4184.12		yes
-AT4G39363    WT		  hy5	 OK  11180.5 2136.42		yes
-AT3G06895    WT		  hy5	 OK  9823.28 2143.76		yes
+AT1G01100	WT	hy5	OK	275.52	192.323	yes
+AT1G01620	WT	hy5	OK	178.441	80.266	yes
+AT1G02140	WT	hy5	OK	105.425	65.1563	yes
+AT1G02500	WT	hy5	OK	71.7299	32.6785	yes
+AT1G01170	WT	hy5	OK	71.5683	21.235	yes
+AT1G01090	WT	hy5	OK	55.3618	33.6315	yes
+AT1G01430	WT	hy5	OK	19.7868	10.301	yes
+AT1G01120	WT	hy5	OK	15.6414	7.70519	yes
+AT1G01610	WT	hy5	OK	14.4058	5.2457	yes
+AT1G02120	WT	hy5	OK	11.3678	23.8411	yes
 </pre>
 
-OK, now we have the 10 most abundant genes in sample 1.  However, the question was "What are the 20 genes with the highest expression levels in sample 1...".  We can get the top 20 by adding the ***-20*** argument to ***head***.  Note also that we were asked for the gene, not the gene plus data.  We can use ***cut*** to extract what we want.  The ***-f1*** arument tells it to grab the first column.
+OK, now we have the 10 most abundant genes in sample 1.  Since we were only asked to list the genes, we can use ***cut*** to get just the list of gene names
 
 <pre>
-$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head -20 | cut -f1
-AT2G01021
-AT1G08115
-ATCG00010
-ATCG00400
-AT5G41471
-XLOC_013786
-ATCG00630
-AT3G24615
-AT4G39363
-AT3G06895
-XLOC_008330
-ATCG00700
-ATCG00390
-AT3G41768
-AT1G29930
-AT1G79040
-XLOC_001625
-AT1G67090
-AT3G56020
-XLOC_032942
+$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head | cut -f1
+AT1G01100
+AT1G01620
+AT1G02140
+AT1G02500
+AT1G01170
+AT1G01090
+AT1G01430
+AT1G01120
+AT1G01610
+AT1G02120
 </pre>
 
 And we have our answer!
