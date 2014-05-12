@@ -55,16 +55,17 @@ by manipulating some experimental data from a hearing test. To get
 the data for this test, you will need internet access. Just enter the
 command:
 
-    git clone https://github.com/{{page.github_username}}/{{page.bootcamp_slug}}.git
+    git clone https://github.com/wltrimbl/2014-05-12-cshl.git
 
 Followed by:
 
-    cd {{page.bootcamp_slug}}
+    cd 2014-05-12-cshl
 
 These 2 commands will grab all of the data needed for this workshop from the
 internet.
 
 ## Let's get started
+
 
 One very basic command is `echo`. This command just prints text to
 the terminal. Try the command:
@@ -141,9 +142,9 @@ you will see that `testfile` is gone.
 
 Now, let's move to a different directory. The command `cd` (change
 directory) is used to move around. Let's move into the
-`{{page.bootcamp_slug}}` directory. Enter the following command:
+`materials/01-shell` directory. Enter the following command:
 
-    cd {{page.bootcamp_slug}}
+    cd materials
 
 Now use the `ls` command to see what is inside this directory. You
 will see that there is an entry which is green. This means that this
@@ -153,7 +154,7 @@ with a star.
 This directory contains all of the material for this bootcamp. Now
 move to the directory containing the data for the shell tutorial:
 
-    cd shell
+    cd 01-shell
 
 If you enter the `cd` command by itself, you will return to the home
 directory. Try this, and then navigate back to the `shell`
@@ -190,17 +191,17 @@ give `ls` the names of other directories to view. Navigate to the
 home directory if you are not already there. Then enter the
 command:
 
-    ls {{page.bootcamp_slug}}
+    ls 2014-05-12-cshl
 
-This will list the contents of the `{{page.bootcamp_slug}}` directory without
-you having to navigate there. Now enter:
+This will list the contents of the `2014-05-12-cshl` directory without
+your having to navigate there. Now enter:
 
-    ls {{page.bootcamp_slug}}/shell
+    ls 2014-05-12-cshl/materials/01-shell
 
 This prints the contents of `shell`. The `cd` command works in a
 similar way. Try entering:
 
-    cd {{page.bootcamp_slug}}/shell
+    cd 2014-05-12-cshl/materials/01-shell
 
 and you will jump directly to `shell` without having to go through
 the intermediate directory.
@@ -225,16 +226,16 @@ directory in `home` which is a directory in `/`.
 
 Now enter the following command:
 
-    cd /home/swc/{{page.bootcamp_slug}}/shell
+    cd /home/swc/2014-05-12-cshl/materials/01-shell
 
 This jumps to `shell`. Now go back to the home directory. We saw
 earlier that the command:
 
-    cd {{page.bootcamp_slug}}/shell
-
+    cd 2014-05-12-cshl/materials/01-shell
+    
 had the same effect - it took us to the `shell` directory. But,
 instead of specifying the absolute path
-(`/home/swc/{{page.bootcamp_slug}}/shell`), we specified a *relative
+(`/home/swc/2014-05-12-cshl/materials/01-shell`), we specified a *relative
 path*. In other words, we specified the path relative to our current
 directory. A absolute path always starts with a `/`. A relative path does
 not. You can usually use either a absolute path or a relative path
@@ -905,32 +906,141 @@ following:
 3.  Enter the command: `git checkout -- data` You should see that the
     data directory has reappeared in its original state
 
-**BONUS**
 
-Redo exercise 4, except rename only the files which do not already end
-in `.txt`. You will have to use the `man` command to figure out how to
-search for files which do not match a certain name. 
+## Example: text-mininggene expression data
 
-* * * * 
+This is a list of a few commands that we will use to do a little data mining of text file containing a comparison of gene expression data from and RNA-Seq experiment. 
 
-### Bonus:
+<table>
+  <tr><th>|</th><td><i>strings together the inputs/outputs of a series of commands</i></td></tr>
+  <tr><th>cut</th><td><i>extracts sections from each line of text</i></td></tr>
+  <tr><th>grep</th><td><i>searches for patterns in text</i></td></tr>
+  <tr><th>sort</th><td><i>orders lines in text</i></td></tr>
+  <tr><th>head</th><td><i>prints the top N lines of text</i></td></tr>
+  <tr><th>wc</th><td><i>counts words, characters or lines</i></td></tr>
+</table>
 
-**backtick, xargs**: Example find all files with certain text
 
-**alias** -> rm -i
+### The data
 
-**variables** -> use a path example
+You have a tab-delimited text file, gene_exp.txt, that contains data from a differential gene expression analysis.  Each line describes a comparison of numerical expression levels for one gene in two samples.
 
-**.bashrc**
+#### What does the file look like 
 
-**du**
+What is the file structure? Without options, ***head*** will print the top 10 lines of the file
 
-**ln**
+<pre>
+$ head  gene_exp.txt
+gene	sample_1	sample_2	status	value_1	value_2	significant
+AT1G01010		WT		hy5	NOTEST	0	1.49367	no
+AT1G01020		WT		hy5	NOTEST	7.27837	10.7195	no
+AT1G01030		WT		hy5	NOTEST	1.18638	1.10483	no
+AT1G01040		WT		hy5	NOTEST	0.239843	2.24208	no
+AT1G01046		WT		hy5	NOTEST	0		0	no
+AT1G01050		WT		hy5	OK	9.06975		23.5089	yes
+AT1G01060		WT		hy5	NOTEST	4.04534		6.46964	no
+AT1G01070		WT		hy5	NOTEST	1.24918		2.41377	no
+AT1G01073		WT		hy5	NOTEST	0		0	no
+</pre>
 
-**ssh and scp**
+This is a well-formatted, tab-delimited text file.  The header line describes the columns for us.  We can use this to help answer some questions.  Note that ***sort*** and ***cut*** assume that the columns in each row are tab-delimited.
 
-**regular expressions**
+#### How many records are there in the file?
 
-**permissions**
+We can use ***wc -l*** to count the lines
 
-**chaining commands together**
+<pre>
+$ wc -l gene_exp.txt 
+     200 gene_exp.txt
+</pre>
+
+
+#### How many genes have enough data to perform the comparison (have 'OK' status)? How many had significantly different expression levels between samples?
+
+We can search for *OK* and *yes* in the file, then count how many lines are returned by ***grep***.  Note the use of the pipe symbol '|'.  ***wc -l*** is acting on the text printed by ***grep***, not the input file.
+
+<pre>
+$ grep OK gene_exp.txt | wc -l
+    32
+$ grep yes gene_exp.txt | wc -l
+    12
+</pre>
+
+For 199 genes, 32 had enough data to do a comparison and 12 had significantly different expression.
+
+
+### Question:  What if the strings *yes* or *OK* appear in other columns of the file?
+
+There is not a lot of room for free text in this example but it can't hurt to check.  This sort of thing happens all the time in real life!  We can use ***cut*** to remove the normal column (for example, column 7 for 'yes').  Remove column 7, then search for *yes*.
+
+<pre>
+$ cut -f1-6 gene_exp.txt | grep yes
+</pre>
+
+No results.  That is good.  For *OK* we need to search all columns except column 4:
+
+<pre>
+cut -f1-3,5-7 gene_exp.txt | grep OK
+</pre>
+
+No results.  The file is good.  Note that the ***-k*** argument could also have been expressed as ***-k1,2,3,5,6,7***
+
+
+#### What are the 20 genes with the highest expression levels in sample 1 and differ significantly between samples?
+
+We can use ***grep*** to get the 'yes' lines, then use ***sort*** to order the lines base on the numeric values in column 5 (value_1).  We pipe the output to ***head*** so we just look at the top 10 lines for now.  The ***k5*** argument means sort on column (key) 5; ***-n*** means sort numerically.  
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n | head
+AT1G01320	WT	hy5	OK	4.94764	20.8172	yes
+AT1G01050	WT	hy5	OK	9.06975	23.5089	yes
+AT1G02120	WT	hy5	OK	11.3678	23.8411	yes
+AT1G01610	WT	hy5	OK	14.4058	5.2457	yes
+AT1G01120	WT	hy5	OK	15.6414	7.70519	yes
+AT1G01430	WT	hy5	OK	19.7868	10.301	yes
+AT1G01090	WT	hy5	OK	55.3618	33.6315	yes
+AT1G01170	WT	hy5	OK	71.5683	21.235	yes
+AT1G02500	WT	hy5	OK	71.7299	32.6785	yes
+AT1G02140	WT	hy5	OK	105.425	65.1563	yes
+</pre>
+
+You may have noticed that cut and sort use different arguments for the same thing (column number).  The collection of tools in unix-like operating systems evolved over time from a variety of sources and authors, so their command line arguments are not always consistent.  If in doubt:
+
+<pre>
+man cut
+</pre>
+
+Note the the values in column 5 above are all zeros.  We are not quite there yet.  We can use the ***r*** flag to sort in descending order.
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head
+AT1G01100	WT	hy5	OK	275.52	192.323	yes
+AT1G01620	WT	hy5	OK	178.441	80.266	yes
+AT1G02140	WT	hy5	OK	105.425	65.1563	yes
+AT1G02500	WT	hy5	OK	71.7299	32.6785	yes
+AT1G01170	WT	hy5	OK	71.5683	21.235	yes
+AT1G01090	WT	hy5	OK	55.3618	33.6315	yes
+AT1G01430	WT	hy5	OK	19.7868	10.301	yes
+AT1G01120	WT	hy5	OK	15.6414	7.70519	yes
+AT1G01610	WT	hy5	OK	14.4058	5.2457	yes
+AT1G02120	WT	hy5	OK	11.3678	23.8411	yes
+</pre>
+
+OK, now we have the 10 most abundant genes in sample 1.  Since we were only asked to list the genes, we can use ***cut*** to get just the list of gene names
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head | cut -f1
+AT1G01100
+AT1G01620
+AT1G02140
+AT1G02500
+AT1G01170
+AT1G01090
+AT1G01430
+AT1G01120
+AT1G01610
+AT1G02120
+</pre>
+
+And we have our answer!
+
