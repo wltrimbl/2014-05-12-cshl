@@ -66,9 +66,6 @@ internet.
 
 ## Let's get started
 
-cd to the shell directory
-   
-   cd materials/01-shell
 
 One very basic command is `echo`. This command just prints text to
 the terminal. Try the command:
@@ -145,9 +142,9 @@ you will see that `testfile` is gone.
 
 Now, let's move to a different directory. The command `cd` (change
 directory) is used to move around. Let's move into the
-`{{page.bootcamp_slug}}` directory. Enter the following command:
+`materials/01-shell` directory. Enter the following command:
 
-    cd {{page.bootcamp_slug}}
+    cd materials
 
 Now use the `ls` command to see what is inside this directory. You
 will see that there is an entry which is green. This means that this
@@ -157,7 +154,7 @@ with a star.
 This directory contains all of the material for this bootcamp. Now
 move to the directory containing the data for the shell tutorial:
 
-    cd shell
+    cd 01-shell
 
 If you enter the `cd` command by itself, you will return to the home
 directory. Try this, and then navigate back to the `shell`
@@ -194,17 +191,17 @@ give `ls` the names of other directories to view. Navigate to the
 home directory if you are not already there. Then enter the
 command:
 
-    ls {{page.bootcamp_slug}}
+    ls 2014-05-12-cshl
 
-This will list the contents of the `{{page.bootcamp_slug}}` directory without
-you having to navigate there. Now enter:
+This will list the contents of the `2014-05-12-cshl` directory without
+your having to navigate there. Now enter:
 
-    ls {{page.bootcamp_slug}}/shell
+    ls 2014-05-12-cshl/materials/01-shell
 
 This prints the contents of `shell`. The `cd` command works in a
 similar way. Try entering:
 
-    cd {{page.bootcamp_slug}}/shell
+    cd 2014-05-12-cshl/materials/01-shell
 
 and you will jump directly to `shell` without having to go through
 the intermediate directory.
@@ -229,16 +226,16 @@ directory in `home` which is a directory in `/`.
 
 Now enter the following command:
 
-    cd /home/swc/{{page.bootcamp_slug}}/shell
+    cd /home/swc/2014-05-12-cshl/materials/01-shell
 
 This jumps to `shell`. Now go back to the home directory. We saw
 earlier that the command:
 
-    cd {{page.bootcamp_slug}}/shell
-
+    cd 2014-05-12-cshl/materials/01-shell
+    
 had the same effect - it took us to the `shell` directory. But,
 instead of specifying the absolute path
-(`/home/swc/{{page.bootcamp_slug}}/shell`), we specified a *relative
+(`/home/swc/2014-05-12-cshl/materials/01-shell`), we specified a *relative
 path*. In other words, we specified the path relative to our current
 directory. A absolute path always starts with a `/`. A relative path does
 not. You can usually use either a absolute path or a relative path
