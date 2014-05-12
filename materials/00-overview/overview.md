@@ -59,8 +59,9 @@
 ## Who We Are
 
 * Will Trimble (Argonne National Laboratory)
-* Sheldon MacKay (consultant, Ontario Institute for Cancer Research)
-* Michael Huebner (CSHL)
+* Sheldon McKay (consultant, Ontario Institute for Cancer Research)
+* Jason Williams (CSHL iplant)
+* Michael Huebner (CSHL iplant)
 * volunteers
  
 ## Our Goals for You
