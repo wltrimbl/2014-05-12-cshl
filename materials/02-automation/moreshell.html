@@ -107,6 +107,151 @@ If this is what you see, you have the right table.  If not, you may need to trou
 
 <hr>
 
+<h2 id="example-text-mining-gene-expression-data">Example: text-mining gene expression data</h2>
+
+<p>Go to data
+    cd
+    cd ~/2014-05-12-cshl/materials/data/cuffdiff</p>
+
+<p>This is a list of a few commands that we will use to do a little data mining of text file containing a comparison of gene expression data from and RNA-Seq experiment. </p>
+
+<table>
+  <tr><th>|</th><td><i>strings together the inputs/outputs of a series of commands</i></td></tr>
+  <tr><th>cut</th><td><i>extracts sections from each line of text</i></td></tr>
+  <tr><th>grep</th><td><i>searches for patterns in text</i></td></tr>
+  <tr><th>sort</th><td><i>orders lines in text</i></td></tr>
+  <tr><th>head</th><td><i>prints the top N lines of text</i></td></tr>
+  <tr><th>wc</th><td><i>counts words, characters or lines</i></td></tr>
+</table>
+
+<h3 id="the-data">The data</h3>
+
+<p>You have a tab-delimited text file, gene_exp.txt, that contains data from a differential gene expression analysis.  Each line describes a comparison of numerical expression levels for one gene in two samples.</p>
+
+<h4 id="what-does-the-file-look-like">What does the file look like</h4>
+
+<p>What is the file structure? Without options, <strong><em>head</em></strong> will print the top 10 lines of the file</p>
+
+<pre>
+$ head  gene_exp.txt
+gene	sample_1	sample_2	status	value_1	value_2	significant
+AT1G01010		WT		hy5	NOTEST	0	1.49367	no
+AT1G01020		WT		hy5	NOTEST	7.27837	10.7195	no
+AT1G01030		WT		hy5	NOTEST	1.18638	1.10483	no
+AT1G01040		WT		hy5	NOTEST	0.239843	2.24208	no
+AT1G01046		WT		hy5	NOTEST	0		0	no
+AT1G01050		WT		hy5	OK	9.06975		23.5089	yes
+AT1G01060		WT		hy5	NOTEST	4.04534		6.46964	no
+AT1G01070		WT		hy5	NOTEST	1.24918		2.41377	no
+AT1G01073		WT		hy5	NOTEST	0		0	no
+</pre>
+
+<p>This is a well-formatted, tab-delimited text file.  The header line describes the columns for us.  We can use this to help answer some questions.  Note that <strong><em>sort</em></strong> and <strong><em>cut</em></strong> assume that the columns in each row are tab-delimited.</p>
+
+<h4 id="how-many-records-are-there-in-the-file">How many records are there in the file?</h4>
+
+<p>We can use <strong><em>wc -l</em></strong> to count the lines</p>
+
+<pre>
+$ wc -l gene_exp.txt 
+     200 gene_exp.txt
+</pre>
+
+<h4 id="how-many-genes-have-enough-data-to-perform-the-comparison-have-ok-status-how-many-had-significantly-different-expression-levels-between-samples">How many genes have enough data to perform the comparison (have &#39;OK&#39; status)? How many had significantly different expression levels between samples?</h4>
+
+<table>
+  <tbody>
+    <tr>
+      <td>We can search for <em>OK</em> and <em>yes</em> in the file, then count how many lines are returned by <strong><em>grep</em></strong>.  Note the use of the pipe symbol &#39;</td>
+      <td>&#39;.  <strong><em>wc -l</em></strong> is acting on the text printed by <strong><em>grep</em></strong>, not the input file.</td>
+    </tr>
+  </tbody>
+</table>
+
+<pre>
+$ grep OK gene_exp.txt | wc -l
+    32
+$ grep yes gene_exp.txt | wc -l
+    12
+</pre>
+
+<p>For 199 genes, 32 had enough data to do a comparison and 12 had significantly different expression.</p>
+
+<h3 id="question--what-if-the-strings-yes-or-ok-appear-in-other-columns-of-the-file">Question:  What if the strings <em>yes</em> or <em>OK</em> appear in other columns of the file?</h3>
+
+<p>There is not a lot of room for free text in this example but it can&#39;t hurt to check.  This sort of thing happens all the time in real life!  We can use <strong><em>cut</em></strong> to remove the normal column (for example, column 7 for &#39;yes&#39;).  Remove column 7, then search for <em>yes</em>.</p>
+
+<pre>
+$ cut -f1-6 gene_exp.txt | grep yes
+</pre>
+
+<p>No results.  That is good.  For <em>OK</em> we need to search all columns except column 4:</p>
+
+<pre>
+cut -f1-3,5-7 gene_exp.txt | grep OK
+</pre>
+
+<p>No results.  The file is good.  Note that the <strong><em>-k</em></strong> argument could also have been expressed as <strong><em>-k1,2,3,5,6,7</em></strong></p>
+
+<h4 id="what-are-the-20-genes-with-the-highest-expression-levels-in-sample-1-and-differ-significantly-between-samples">What are the 20 genes with the highest expression levels in sample 1 and differ significantly between samples?</h4>
+
+<p>We can use <strong><em>grep</em></strong> to get the &#39;yes&#39; lines, then use <strong><em>sort</em></strong> to order the lines base on the numeric values in column 5 (value_1).  We pipe the output to <strong><em>head</em></strong> so we just look at the top 10 lines for now.  The <strong><em>k5</em></strong> argument means sort on column (key) 5; <strong><em>-n</em></strong> means sort numerically.  </p>
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n | head
+AT1G01320	WT	hy5	OK	4.94764	20.8172	yes
+AT1G01050	WT	hy5	OK	9.06975	23.5089	yes
+AT1G02120	WT	hy5	OK	11.3678	23.8411	yes
+AT1G01610	WT	hy5	OK	14.4058	5.2457	yes
+AT1G01120	WT	hy5	OK	15.6414	7.70519	yes
+AT1G01430	WT	hy5	OK	19.7868	10.301	yes
+AT1G01090	WT	hy5	OK	55.3618	33.6315	yes
+AT1G01170	WT	hy5	OK	71.5683	21.235	yes
+AT1G02500	WT	hy5	OK	71.7299	32.6785	yes
+AT1G02140	WT	hy5	OK	105.425	65.1563	yes
+</pre>
+
+<p>You may have noticed that cut and sort use different arguments for the same thing (column number).  The collection of tools in unix-like operating systems evolved over time from a variety of sources and authors, so their command line arguments are not always consistent.  If in doubt:</p>
+
+<pre>
+man cut
+</pre>
+
+<p>Note the the values in column 5 above are all zeros.  We are not quite there yet.  We can use the <strong><em>r</em></strong> flag to sort in descending order.</p>
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head
+AT1G01100	WT	hy5	OK	275.52	192.323	yes
+AT1G01620	WT	hy5	OK	178.441	80.266	yes
+AT1G02140	WT	hy5	OK	105.425	65.1563	yes
+AT1G02500	WT	hy5	OK	71.7299	32.6785	yes
+AT1G01170	WT	hy5	OK	71.5683	21.235	yes
+AT1G01090	WT	hy5	OK	55.3618	33.6315	yes
+AT1G01430	WT	hy5	OK	19.7868	10.301	yes
+AT1G01120	WT	hy5	OK	15.6414	7.70519	yes
+AT1G01610	WT	hy5	OK	14.4058	5.2457	yes
+AT1G02120	WT	hy5	OK	11.3678	23.8411	yes
+</pre>
+
+<p>OK, now we have the 10 most abundant genes in sample 1.  Since we were only asked to list the genes, we can use <strong><em>cut</em></strong> to get just the list of gene names</p>
+
+<pre>
+$ grep 'yes' gene_exp.txt | sort -k5 -n -r | head | cut -f1
+AT1G01100
+AT1G01620
+AT1G02140
+AT1G02500
+AT1G01170
+AT1G01090
+AT1G01430
+AT1G01120
+AT1G01610
+AT1G02120
+</pre>
+
+<p>And we have our answer!</p>
+
+
 	</div>
       </div>
 
