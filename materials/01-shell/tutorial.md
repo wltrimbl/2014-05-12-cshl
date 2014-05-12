@@ -55,16 +55,20 @@ by manipulating some experimental data from a hearing test. To get
 the data for this test, you will need internet access. Just enter the
 command:
 
-    git clone https://github.com/{{page.github_username}}/{{page.bootcamp_slug}}.git
+    git clone https://github.com/wltrimbl/2014-05-12-cshl.git
 
 Followed by:
 
-    cd {{page.bootcamp_slug}}
+    cd 2014-05-12-cshl
 
 These 2 commands will grab all of the data needed for this workshop from the
 internet.
 
 ## Let's get started
+
+cd to the shell directory
+   
+   cd materials/01-shell
 
 One very basic command is `echo`. This command just prints text to
 the terminal. Try the command:
