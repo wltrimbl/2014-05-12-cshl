@@ -1,7 +1,7 @@
 % Software Carpentry - Overview
-  Iowa State University
+  Cold Spring Harbor Laboratory
 % Software Carpentry Team
-% January 2014 Polar Vortex Edition (TM)
+% May 2014 
 
 ## Copy This Lecture!
 <br></br>
@@ -56,19 +56,19 @@
 
 ## Who We Are
 
-* Adina Howe (Argonne / Michigan State U)
-* Will Trimble (Argonne)
-* Kirsten Hofmockel (ISU)
+* Will Trimble (Argonne National Laboratory)
+* Sheldon MacKay (iplant / formerly of CSHL) 
+* Michael Huebner (CSHL)
 * volunteers
  
 ## Our Goals for You
 
 ### We will take you on a tour of:
 
-* Managing and sharing Software, Data, and Manuscripts with **Git**
 * Automating things with the **shell**
 * Practical Programming with **Python**
-* Scientific Computing with Python (numpy, matplotlib)
+* Introduction to **R** (using Rstudio) 
+* Managing and sharing Software, Data, and Manuscripts with **Git**
 
 # Some High-Level Advice
 
@@ -176,7 +176,8 @@ computations or model are naturally expressed with it
   + not a good candidate for automation.  (Not sad at all)
 
 ## Document your computational work
-* Save every bit of code you use for generating publishable results
+* Save **every bit of code** you use for generating publishable results
+* Save the scripts that get and process the data
 * Document and comment your code for yourself as if you will need to understand
 it in 6 months
   + use README files liberally
