@@ -19,6 +19,8 @@
 * Founded by Greg Wilson in 1998, teaching scientists how to use supercomputers at LANL.
 * Open sourced materials 2004-present
 * Currently funded by the Sloan Foundation and the Mozilla Foundation
+* http://www.plosbiology.org/article/info%3Adoi%2F10.1371%2Fjournal.pbio.1001745 
+ "Best practices for scientific computing" paper in PLOS Biology
 
 ## What We Teach
 
@@ -57,7 +59,7 @@
 ## Who We Are
 
 * Will Trimble (Argonne National Laboratory)
-* Sheldon MacKay (iplant / formerly of CSHL) 
+* Sheldon MacKay (consultant, Ontario Institute for Cancer Research)
 * Michael Huebner (CSHL)
 * volunteers
  
@@ -154,6 +156,7 @@ computations or model are naturally expressed with it
  to be confident in festooning.
 
 ## Back up your data!
+* Back up everything important in proportion to its replacement value.
 
 ## Use version control for checkpointing and collaboration
 
