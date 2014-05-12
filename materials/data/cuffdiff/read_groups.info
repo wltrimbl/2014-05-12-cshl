@@ -1,0 +1,5 @@
+file	condition	replicate_num	total_mass	norm_mass	internal_scale	external_scale
+WT_rep1.bam	WT	0	996994	973514	1.08624	1
+WT_rep2.bam	WT	1	994083	973514	1.07577	1
+hy5_rep1.bam	hy5	0	975808	973514	0.945742	1
+hy5_rep2.bam	hy5	1	976939	973514	0.955443	1

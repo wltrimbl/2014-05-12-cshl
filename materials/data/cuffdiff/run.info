@@ -1,0 +1,5 @@
+param	value
+cmd_line	/usr/local2/cufflinks-2.1.1.Linux_x86_64/cuffdiff --min-alignment-count 10 --compatible-hits-norm -o cuffdiff_out --FDR 0.05 --frag-bias-correct /data2/collections/genomeservices/1.0.0/14_67/Arabidopsis_thaliana.TAIR10/de_support/genome.fas --labels WT,hy5 -p 6 merged_with_ref_ids.gtf WT_rep1.bam,WT_rep2.bam hy5_rep1.bam,hy5_rep2.bam 
+version	2.1.1
+SVN_revision	4046M
+boost_version	104900
