@@ -24,7 +24,7 @@ $ cd /Users/smckay/2014-05-12-cshl/materials/data/cuffdiff
 $ curl -o cuffData.db http://mkay.cshl.edu/downloads/cuffData.db
 ```
 
-We will start working in R,  Iimport the cummeRbund library:
+We will start working in R,  Import the cummeRbund library:
 
 ```{r}
 library(cummeRbund)
