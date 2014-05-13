@@ -9,7 +9,7 @@ Imagine you have two computers: the first is a big, powerful desktop machine
 with a big, dual monitor setup. The second is a tiny lightweight netbook you 
 take with you when you travel. Imagine also that you have a presentation at a 
 conference overseas. You know that no matter how "finished" you think you are 
-with your slide deck, inevitably you will realize you need to add an extra figure 
+with your slide deck, inevitably you will realize you need to add an exta figure 
 or recalculate some data AFTER leaving the country and your main desktop 
 workstation. How can you be sure your slide deck, data, and the programs you've 
 written are synchronized between your two machines? How can you be sure that 
@@ -26,13 +26,12 @@ concurrently. There are a lot of version control systems. Wikipedia
 provides both a nice vocabulary list and a fairly complete table of some
 popular version control systems and their equivalent commands.
 
-What problems does version control solve?
-* undo mistakes by rolling back to earlier versions
-* run and test with older versions for debugging (when did it break?)
+What problems does version control solve?  
+* undo mistakes by rolling back to earlier versions 
+* run and test with older versions for debugging
 * allows you to keep and switch between multiple verisons of code
-* automatic merging of edits by different people
-* can distribute/publish analysis code and workflows
-* archive or back up your thesis so when your laptop goes away, your thesis doesn't
+* automatic merging of edits by different people 
+* distribution and synchronization of code
 
 Today, we'll be using git. Git is an example of a distributed version
 control system, distinct from centralized version control systems. I'll
@@ -50,10 +49,11 @@ Version Control System Tool Options
   - concurrent versions system (cvs)
   - subversion (svn)
 
-## git clone : we've seen git already
+## git clone : we've seen git already  
+
 Yesterday morning, after installing git, we asked everyone to run
 ```
-git clone http://github.com/USERNAME/YYYY-MM-DD-PLACE 
+git clone http://github.com/wltrimbl/2014-05-12-cshl
 ```
 This created a copy of the software carpentry repository materials on
 each of your hard drives yesterday morning.   If you did this yesterday,
@@ -65,7 +65,8 @@ the repositories on all our hard drives are out of date.
 ```
 cd
 cd boot-camps
-git pull
+git fetch
+git merge origin/gh-pages
 ```
 will try to retrieve all of last night's changes and update your local
 copies.  Note: git commands work only when executed from within the directory
@@ -157,7 +158,7 @@ Step 1 : Initialize your repository.
     $ mkdir good_science
     $ cd good_science
     $ git init
-    Initialized empty Git repository in /home/swc/good_science/.git/
+    Initialized empty Git repository in /Users/swc/good_science/.git/
 
 Step 2 : Browse the directory's hidden files to see what happened here.
 Open directories, browse file contents. Learn what you can in a minute.
@@ -175,19 +176,8 @@ called "Reproducible Science". You may call yours anything you like.
 
     $ nano description &
 
-Step 4 : Applications sometimes create files that are not needed. For
-example, some applications create backup or temporary files with names like'filename.bak' and 
-'filename.aux' that don't really need to be watched by version control. 
-You can ask git to ignore such files by editing
-the file '.git/info/exclude'. Edit the file to ignore files the end with '.bak'.
+[Mark Lodato's visual guide to git](http://marklodato.github.io/visual-git-guide/index-en.html) 
 
-     git ls-files --others --exclude-from=.git/info/exclude
-    # Lines that start with '#' are comments.
-    # For a project mostly in C, the following would be a good set of
-    # exclude patterns (uncomment them if you want to use them):
-    # *.[oa]
-    # *~
-    
 ## git add : Adding a File To Version Control
 
 For the git repository to know which files within this directory you
@@ -251,10 +241,11 @@ More frequent commits increase the granularity of your **undo** button.
 There are no hard and fast rules, but good commits are atomic:
 they are the smallest meaningful change. A good 
 commit message usually contains a one-line description followed 
-by a longer explanation if necessary.  Remember, you will be writing
-commit messages for yourself as much as for anyone else.
+by a longer explanation if necessary. Remember, you are writing 
+commit messages for yourself more than for anyone else.
 
-[Our repo](https://github.com/swcarpentry/bc/) should have some good commit messages.
+[Our repo](https://github.com/wltrimbl/2014-05-12-cshl)
+has some hopefully good commit messages.
 
 ### Exercise : Commit Your Changes
 
@@ -345,9 +336,9 @@ There are some useful flags for this command, such as
    git rm filename   (Removes a file from the repository)
    
 ### Exercise : 
-    1) Create 5 files in your directory with one line of content in each file.
+    1) Create 3 files in your directory with one line of content in each file.
     2) Commit the files to the repository.
-    3) Change 2 of the 5 files and commit them.
+    3) Change 2 of the 3 files and commit them.
     4) Undo the changes in step 3)
     5) Print out the last entry in the log.
     
@@ -367,6 +358,11 @@ exist in your repository.
 The master branch is created when the repository is initialized. With an
 argument, the **branch** command creates a new branch with the given
 name.
+
+**Branches are free** The only real estate occupied by branches is on your
+screen and in your mind.  Any conceptually separate set of edits can 
+merit its own branch, and you can switch between branches for free.
+
 
     $ git branch experimental
     $ git branch
@@ -447,42 +443,15 @@ Step 3 : Merge the two branches into the core
 ## git clone : Copying a Repository
 
 Yesterday, you checked out a git type repository at
-https://github.com/USERNAME/YYYY-MM-DD-PLACE
+https://github.com/wltrimbl/2014-05-12-cshl
 
 When you clone the Original repository, the one that is created on your
 local machine is a copy, and contains both the contents and the history.
 With the right configuration, you can share your changes with your
-collaborators and import changes that others made in their versions.  You
-can also update the original repository with your changes.
+collaborators and import changes that others made in their versions. 
+You can also update the original repository with your changes.
 
-We'll get to that soon, but for now, let's move on to a fairly
-easy-to-use system for managing repositories.
-
-### Exercise : Cloning Another Repository from GitHub
-
-Step 1 : Pick any repository you like. There are many cool projects
-hosted on github. Take a few minutes here, and pick a piece of code.
-
-Step 2 : Clone it. If you didn't find anything cool, you can chose the
-"instructional" Spoon-Knife repository:
-
-    $ cd
-    $ git clone git@github.com/octocat/Spoon-Knife.git
-    Cloning into Spoon-Knife...
-    remote: Counting objects: 24, done.
-    remote: Compressing objects: 100% (21/21), done.
-    remote: Total 24 (delta 7), reused 17 (delta 1)
-    Receiving objects: 100% (24/24), 74.36 KiB, done.
-    Resolving deltas: 100% (7/7), done.
-
-Step 3 : You should see many files download themselves onto your
-machine. Let's make sure it worked. Change directories to the source
-code and list the contents.
-
-    $ cd Spoon-Knife
-    $ ls 
-
-## git pull : Pulling updates from the Original Repository
+## git fetch : Getting updates from the Original Repository
 
 Updating your repository is like voting. You should update early and
 often especially if you intend to contribute back to the upstream
@@ -491,7 +460,7 @@ will ensure you're working with the most up-to-date version of the
 repository. Updating won't overwrite any changes you've made locally
 without asking, so don't get nervous. When in doubt, update.
 
-    $ git pull 
+    $ git fetch 
     Already up-to-date.
 
 Since we just pulled the repository down, we will be up to date unless

@@ -1,8 +1,8 @@
 ---
 layout: lesson
 root: ../..
-testrepo: 2013-12-25-euphoric
-username: instructor
+testrepo: testrepo-2014-05-12-cshl
+username: wltrimbl
 title: "Version Control With Git: Using Remote Repositories"
 ---
 ## github.com?
@@ -126,22 +126,6 @@ upstream master branch into your master branch
     $ git merge upstream/master
 
 Step 3 : Check out what happened by browsing the directory.
-
-## git pull : Pull = Fetch + Merge
-
-The command **git pull** is the same as executing **git fetch** followed
-by **git merge**. Though it is not recommened for cases in which there
-are many branches to consider, the pull command is shorter and simpler
-than fetching and merging as it automates the branch matching.
-Specificially, to perform the same task as we did in the previous
-exercise, the pull command would be :
-
-    $ git pull upstream
-    Already up-to-date.
-
-When there have been remote changes, the pull will apply those changes
-to your local branch, unless there are conflicts with your local
-changes.
 
 ## git push : Sending Your Commits to Remote Repositories
 
