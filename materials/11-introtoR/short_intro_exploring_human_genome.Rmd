@@ -44,7 +44,7 @@ getwd()
 
 ```{r}
 # Your code here
-
+setwd('/Users/smckay/2014-05-12-cshl/11-11-introtoR')
 ```
 
 ## Import and inspect the dataset
@@ -73,7 +73,7 @@ inspect this dataset. As we explore what we have imported, we'll learn about
 the different data types in R.
 
 ```{r}
-class(genes)cla
+class(genes)
 dim(genes)
 str(genes)
 ```
