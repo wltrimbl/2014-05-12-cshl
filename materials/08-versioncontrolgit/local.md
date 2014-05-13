@@ -19,24 +19,24 @@ need to drop back to the slide deck you had five days ago?
 
 ## git : What is Version Control ?
 
-Very briefly, version control is a way to *keep a backup of changing
-files*, to *store a history of those changes*, and most importantly to
-*allow many people in a collaboration to make changes* to the same files
+Very briefly, version control is a way to **keep a backup of changing
+files**, to **store a history of those changes**, and most importantly to
+**allow many people in a collaboration to make changes** to the same files
 concurrently. There are a lot of version control systems. Wikipedia
 provides both a nice vocabulary list and a fairly complete table of some
-popular version control systems and their equivalent commands.
+popular [version control systems](http://en.wikipedia.org/wiki/Version_control).
 
 What problems does version control solve?  
-* undo mistakes by rolling back to earlier versions 
-* run and test with older versions for debugging
-* allows you to keep and switch between multiple verisons of code
-* automatic merging of edits by different people 
-* distribution and synchronization of code
+- undo mistakes by rolling back to earlier versions 
+- run and test with older versions for debugging
+- allows you to keep and switch between multiple verisons of code
+- automatic merging of edits by different people 
+- distribution, synchronization, and backup of code
 
 Today, we'll be using git. Git is an example of a distributed version
-control system, distinct from centralized version control systems. I'll
-make the distinction clear later, but for now, the table below will
-suffice.
+control system, distinct from centralized version control systems. 
+A list of version control systems follows--all have the essential 
+functionality.
 
 Version Control System Tool Options
 
@@ -52,9 +52,9 @@ Version Control System Tool Options
 ## git clone : we've seen git already  
 
 Yesterday morning, after installing git, we asked everyone to run
-```
-git clone http://github.com/wltrimbl/2014-05-12-cshl
-```
+
+    git clone http://github.com/wltrimbl/2014-05-12-cshl
+
 This created a copy of the software carpentry repository materials on
 each of your hard drives yesterday morning.   If you did this yesterday,
 you don't need to to it again.
@@ -62,12 +62,11 @@ you don't need to to it again.
 *But*, last night, the instructors changed the content on github, so now
 the repositories on all our hard drives are out of date.
 
-```
-cd
-cd boot-camps
-git fetch
-git merge origin/gh-pages
-```
+    cd
+    cd boot-camps
+    git fetch
+    git merge origin/gh-pages
+
 will try to retrieve all of last night's changes and update your local
 copies.  Note: git commands work only when executed from within the directory
 that contains the repository.
@@ -176,13 +175,24 @@ called "Reproducible Science". You may call yours anything you like.
 
     $ nano description &
 
-[Mark Lodato's visual guide to git](http://marklodato.github.io/visual-git-guide/index-en.html) 
+When we're done let's change directories back to `good_science`:
+    cd ..
+    pwd 
+    /home/swc/good_science
+
 
 ## git add : Adding a File To Version Control
 
 For the git repository to know which files within this directory you
 would like to keep track of, you must add them. First, you'll need to
 create one, then we'll learn the **git add** command.
+
+### Exercise : fire up a text editor and create a file in `good_science`.
+Our recommended editors are Textwrangler (mac), kate (linux) and Notepad++ (windows).
+`nano` is a low-functionality editor that is easy to use.
+
+Windows users: [swc-windows-installer.py](https://raw.github.com/swcarpentry/bc/master/setup/swc-windows-installer.py)
+is a script intended to make your gitbash environment somewhat more sane.
 
 ### Exercise : Add a File to Your Local Repository
 
@@ -194,6 +204,8 @@ Step 2 : Inform git that you would like to keep track of future changes
 in this file.
 
     $ git add readme.rst
+
+[Mark Lodato's visual guide to git](http://marklodato.github.io/visual-git-guide/index-en.html) 
 
 ## git status : Checking the Status of Your Local Copy
 
