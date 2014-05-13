@@ -1,0 +1,86 @@
+Demonstration: Using the cummeRbund library with cuffdiff data
+==============================================================
+
+cummeRbund is an R library for Analysis, exploration, manipulation, and visualization of Cufflinks high-throughput sequencing data.  It is part of the bioconductor package.
+
+We will go through a qick demonstration of how cummeRbund can be used, without goinf into too much detail.
+
+Installation:
+
+```{r}
+source("http://bioconductor.org/biocLite.R")
+biocLite("cummeRbund")
+```
+
+$ cd /Users/smckay/2014-05-12-cshl
+$ git pull
+
+We will import the cummeRbund library
+
+```{r}
+library(cummeRbund)
+```
+
+There is a database needed by cummeRbund; we need to make sure that we are in the right directory.
+
+```{r}
+setwd('/Users/smckay/2014-05-12-cshl/materials/data/cuffdiff')
+```
+
+Then, we read in the database from the cuffdiff output data.  
+
+```{r}
+cuff <- readCufflinks()
+```
+
+This database was created for you already.  If it had not existed, readCuffllinks() would have created it from the raw cuffdiff output files, which are not in the repository due to their large size.
+
+Now we can demonstrate some cuffdiff functionality.  Let's start by plotting gene density for the sample in this cuffdiff analysis
+
+```{r}
+csDensity(genes(cuff))
+```
+
+This is a plot of the frequency of genes for each sample against log10(fpkm).  fpkm is a measure of transfrag abundace.  Note that our sample names are 'WT' and 'hy5'.
+
+Next, we can compare expression of genes between the two samples with a scatterplot
+
+```{r}
+csScatter(genes(cuff),'WT', 'hy5')
+```
+
+We can also save this plot to a file
+
+```{r}
+png('scatter_plot.png')
+csScatter(genes(cuff),'WT', 'hy5')
+dev.off()
+```
+
+Cuffdiff performs a statistical analysis to identify genes whose expression is significantly different between samples.  We can identify which genes in the experiment meet this criterion.
+
+```{r}
+sig <- getSig(cuff, alpha=0.0001, level='genes')
+```
+
+The we can extract the data for a subset (the first 25) of these genes.  head() grabs the first 25 gene names.
+
+```{r}
+sigGenes <- getGenes(cuff,head(sig,25))
+sig
+```
+
+Now, lets try plotting a heat map comparing gene expression between the two files
+```{r}
+csHeatmap(sigGenes, cluster='both')
+```
+
+...and an expression plot
+```{r}
+expressionPlot(sigGenes,logMode=T,showErrorbars=F)
+```
+
+This in only a quick sample of how you can use cummeRbund to analyze cuffdiff data.  For more information, see:
+
+http://compbio.mit.edu/cummeRbund/manual_2_0.html
+
