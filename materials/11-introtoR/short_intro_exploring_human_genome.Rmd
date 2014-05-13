@@ -54,7 +54,7 @@ Instead of opening the file in Excel, we use R's `read.table` function.
 ```{r}
 genes <- read.table("data/ensembl_human_genes.txt", header = TRUE, sep = "\t",
                     quote = "", stringsAsFactors = FALSE)
-head
+head(genes)
 ```
 
 We have provided R the following information to retrieve our dataset:
